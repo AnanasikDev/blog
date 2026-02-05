@@ -23,9 +23,20 @@ This is NOT an instruction nor am I stating that this is the only or the best wa
 
 Go to [themes](https://themes.gohugo.io/) and find one you like the most. Some even have interactive demos to help you choose.
 
-You then download the theme from the website 
+You then download the theme from the website
+
+### Content
+
+in content/post you create folders, for example:<br>
+--- content<br>
+------ post<br>
+--------- myarticle<br>
+------------ index.md<br>
+------------ cover.jpg<br>
 
 ### Run
+
+from local root directory run:
 
 ```
 hugo server

@@ -27,3 +27,5 @@ Historically, this is one of my first projects on Unity, started on *November 4,
 While clearing my PC and trying to find something interesting to post here, I stumbled across a very interesting artifact, called `LollyJump6.2Test.py`. Version control was minimalistic at that time for me, but what made me even more curious was the fact that I wrote that in Python! Apparently, unbeknownst to me, the history of Lolly Jump dated way back to *May 2020*.
 
 [Artifact](/blog/posts/lolly_jump/LollyJump6.2Test.py) as it was found.
+
+<img src="python_version.png"></img>
