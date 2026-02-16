@@ -5,10 +5,10 @@
             <h2 style="margin: 0; color: #34d399; font-size: 2rem; letter-spacing: -1.5px;">&lt;VectorLab /&gt;</h2>
             <button onclick="resetAll()" style="background: #1e293b; color: #f87171; border: 1px solid #f8717144; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">RESET ALL</button>
         </div>
-        <div style="display: flex; gap: 20px; align-items: center; font-size: 1.1rem;">
+        <div style="display: flex; gap: 15px; align-items: center; font-size: 1rem;">
             <div class="dropdown-group">
-                <span style="font-weight: bold;">Pos Snap:</span>
-                <select id="posSnapSelect" onchange="render()" style="font-size: 1rem; padding: 4px;">
+                <span style="font-weight: bold;">Pos:</span>
+                <select id="posSnapSelect" onchange="render()" style="font-size: 0.9rem; padding: 4px;">
                     <option value="0.01">None</option>
                     <option value="0.1">0.10</option>
                     <option value="0.25" selected>0.25</option>
@@ -17,8 +17,8 @@
                 </select>
             </div>
             <div class="dropdown-group">
-                <span style="font-weight: bold;">Rot Snap:</span>
-                <select id="rotSnapSelect" onchange="render()" style="font-size: 1rem; padding: 4px;">
+                <span style="font-weight: bold;">Rot:</span>
+                <select id="rotSnapSelect" onchange="render()" style="font-size: 0.9rem; padding: 4px;">
                     <option value="1">None</option>
                     <option value="5">5°</option>
                     <option value="15" selected>15°</option>
@@ -27,11 +27,15 @@
                     <option value="90">90°</option>
                 </select>
             </div>
-            <label class="custom-checkbox" style="font-size: 1rem;">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="ghostToggle" onchange="render()">
+                <span>Ghost</span>
+            </label>
+            <label class="custom-checkbox">
                 <input type="checkbox" id="unitToggle" onchange="toggleUnitMode()">
                 <span>Unit Only</span>
             </label>
-            <label class="custom-checkbox" style="font-size: 1rem;">
+            <label class="custom-checkbox">
                 <input type="checkbox" id="angleModeToggle" onchange="render()">
                 <span>Local Rot</span>
             </label>
@@ -49,7 +53,7 @@
 
         <div style="width: 420px; display: flex; flex-direction: column; gap: 15px;">
             
-            <div style="display: flex; gap: 15px; background: #020617; padding: 18px 25px 18px 18px; border-radius: 12px; border: 1px solid #1e293b; border-left: 5px solid #60a5fa;">
+            <div style="display: flex; gap: 10px; background: #020617; padding: 18px 40px 18px 8px; border-radius: 12px; border: 1px solid #1e293b; border-left: 5px solid #60a5fa;">
                 <div class="rot-container" onmouseenter="hoverRot=0;render()" onmouseleave="hoverRot=null;render()">
                     <div class="rot-scale"><span>359°</span><span>0°</span></div>
                     <input type="range" class="rot-slider" id="rotSlider0" min="0" max="359" step="1" oninput="rotateVec(0, this.value)">
@@ -70,11 +74,12 @@
                         <button class="tool-btn" onclick="transform(0, 'negate')">NEGATE</button>
                         <button class="tool-btn" onclick="transform(0, 'perp')">PERP</button>
                         <button class="tool-btn" onclick="transform(0, 'norm')">NORM</button>
+                        <button class="tool-btn" onclick="reflect(0)">REFL</button>
                     </div>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 15px; background: #020617; padding: 18px 25px 18px 18px; border-radius: 12px; border: 1px solid #1e293b; border-left: 5px solid #f87171;">
+            <div style="display: flex; gap: 10px; background: #020617; padding: 18px 40px 18px 8px; border-radius: 12px; border: 1px solid #1e293b; border-left: 5px solid #f87171;">
                 <div class="rot-container" onmouseenter="hoverRot=1;render()" onmouseleave="hoverRot=null;render()">
                     <div class="rot-scale"><span>359°</span><span>0°</span></div>
                     <input type="range" class="rot-slider" id="rotSlider1" min="0" max="359" step="1" oninput="rotateVec(1, this.value)">
@@ -95,6 +100,7 @@
                         <button class="tool-btn" onclick="transform(1, 'negate')">NEGATE</button>
                         <button class="tool-btn" onclick="transform(1, 'perp')">PERP</button>
                         <button class="tool-btn" onclick="transform(1, 'norm')">NORM</button>
+                        <button class="tool-btn" onclick="reflect(1)">REFL</button>
                     </div>
                 </div>
             </div>
@@ -130,32 +136,27 @@
     .custom-checkbox input { appearance: none; width: 18px; height: 18px; border: 2px solid #334155; border-radius: 4px; background: #0f172a; cursor: pointer; position: relative; }
     .custom-checkbox input:checked { background: #34d399; border-color: #34d399; }
     .custom-checkbox input:checked::after { content: '✓'; position: absolute; color: #0f172a; font-size: 14px; font-weight: bold; left: 2px; top: -2px; }
-    
     .dropdown-group { display: flex; align-items: center; gap: 8px; color: #94a3b8; }
     .dropdown-group select { background: #1e293b; border: 1px solid #334155; color: #fff; border-radius: 4px; outline: none; cursor: pointer; }
-
     .stepper-wrap { display: flex; align-items: center; gap: 6px; }
     .stepper-wrap > span { font-family: monospace; font-weight: bold; font-size: 0.85rem; color: #64748b; }
-    
     .stepper { display: flex; align-items: center; background: #1e293b; border-radius: 6px; overflow: hidden; border: 1px solid #334155; height: 32px; }
     .stepper button { background: #334155; color: #fff; border: none; width: 24px; height: 100%; cursor: pointer; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
     .stepper button:hover { background: #475569; }
     .stepper input { width: 55px; background: transparent; border: none; color: #fff; text-align: center; font-family: monospace; font-size: 0.95rem; outline: none; padding: 0; }
-    
     .vec-slider { height: 10px; accent-color: #34d399; cursor: pointer; }
-    .tool-btn { flex: 1; padding: 8px; font-size: 0.8rem; background: #0f172a; color: #94a3b8; border: 1px solid #334155; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .tool-btn { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #0f172a; color: #94a3b8; border: 1px solid #334155; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .tool-btn:hover { border-color: #34d399; color: #fff; }
-
-    .rot-container { display: flex; align-items: center; gap: 8px; position: relative; width: 45px; transition: background 0.2s; border-radius: 6px; }
-    .rot-container:hover { background: #1e293b44; }
+    /* Adjusted rot-container for more compactness on the left */
+    .rot-container { display: flex; align-items: center; gap: 8px; position: relative; width: 35px; border-radius: 6px; }
     .rot-slider { 
         appearance: none; width: 100px; height: 6px; background: #1e293b; border-radius: 10px;
-        transform: rotate(-90deg); transform-origin: center; position: absolute; left: -25px; top: 45%;
+        transform: rotate(-90deg); transform-origin: center; position: absolute; left: -32px; top: 45%;
         accent-color: #34d399; cursor: pointer;
     }
     .rot-scale { 
         display: flex; flex-direction: column; justify-content: space-between; height: 100%; 
-        font-family: monospace; font-size: 0.65rem; color: #64748b; padding-left: 28px; 
+        font-family: monospace; font-size: 0.65rem; color: #64748b; padding-left: 20px; 
     }
 </style>
 
@@ -163,10 +164,8 @@
     const canvas = document.getElementById('vectorCanvas');
     const ctx = canvas.getContext('2d');
     const center = 250, scale = 70;
-
     let vectors = [{x:1, y:0, color:'#60a5fa'}, {x:0, y:1, color:'#f87171'}];
-    let activeVec = null;
-    let hoverRot = null;
+    let activeVec = null, hoverRot = null;
 
     function resetAll() {
         vectors = [{x:1, y:0, color:'#60a5fa'}, {x:0, y:1, color:'#f87171'}];
@@ -174,13 +173,12 @@
         document.getElementById('rotSnapSelect').value = "15";
         document.getElementById('angleModeToggle').checked = false;
         document.getElementById('unitToggle').checked = false;
+        document.getElementById('ghostToggle').checked = false;
         render();
     }
 
     function toggleUnitMode() {
-        if (document.getElementById('unitToggle').checked) {
-            vectors.forEach((v, i) => transform(i, 'norm'));
-        }
+        if (document.getElementById('unitToggle').checked) vectors.forEach((v, i) => transform(i, 'norm'));
         render();
     }
 
@@ -189,15 +187,10 @@
     function getFraction(rad) {
         let deg = Math.round(Math.abs(rad * 180 / Math.PI));
         if (deg === 0) return "0";
-        let commonAngles = { 
-            30: "1/6", 45: "1/4", 60: "1/3", 90: "1/2", 120: "2/3", 135: "3/4", 
-            150: "5/6", 180: "1", 270: "3/2", 360: "2" 
-        };
+        let commonAngles = { 30:"1/6", 45:"1/4", 60:"1/3", 90:"1/2", 120:"2/3", 135:"3/4", 150:"5/6", 180:"1", 270:"3/2", 360:"2" };
         if (commonAngles[deg]) return `(${commonAngles[deg]}π)`;
-        let numerator = deg;
-        let denominator = 180;
-        let divisor = gcd(numerator, denominator);
-        return `(${numerator/divisor}/${denominator/divisor}π)`;
+        let num = deg, den = 180, div = gcd(num, den);
+        return `(${num/div}/${den/div}π)`;
     }
 
     function validateInput(idx, comp, el) {
@@ -234,174 +227,145 @@
     function updateLen(idx, val) {
         if (document.getElementById('unitToggle').checked) return;
         let targetLen = Math.max(0, Math.min(5, parseFloat(val) || 0));
-        let v = vectors[idx];
-        let mag = Math.sqrt(v.x**2 + v.y**2);
+        let v = vectors[idx], mag = Math.sqrt(v.x**2 + v.y**2);
         if (mag === 0) { v.x = targetLen; v.y = 0; }
-        else { v.x = (v.x / mag) * targetLen; v.y = (v.y / mag) * targetLen; }
-        render('skip-len');
+        else { v.x = (v.x/mag)*targetLen; v.y = (v.y/mag)*targetLen; }
+        render();
     }
 
     function rotateVec(idx, deg) {
         let snap = parseInt(document.getElementById('rotSnapSelect').value);
-        let snappedDeg = Math.round(deg / snap) * snap;
-        let v = vectors[idx];
-        let mag = Math.sqrt(v.x**2 + v.y**2);
-        if (mag === 0) mag = 1;
-        let targetRad = snappedDeg * (Math.PI / 180);
-        if (document.getElementById('angleModeToggle').checked) {
-            targetRad += Math.atan2(vectors[1-idx].y, vectors[1-idx].x);
-        }
-        v.x = Math.cos(targetRad) * mag;
-        v.y = Math.sin(targetRad) * mag;
+        let snappedDeg = Math.round(deg/snap)*snap, v = vectors[idx];
+        let mag = Math.sqrt(v.x**2 + v.y**2); if (mag === 0) mag = 1;
+        let targetRad = snappedDeg * (Math.PI/180);
+        if (document.getElementById('angleModeToggle').checked) targetRad += Math.atan2(vectors[1-idx].y, vectors[1-idx].x);
+        v.x = Math.cos(targetRad)*mag; v.y = Math.sin(targetRad)*mag;
         render('skip-rot');
     }
 
     function transform(idx, type) {
         let v = vectors[idx];
         if (type === 'negate') { v.x *= -1; v.y *= -1; }
-        if (type === 'perp') { let t = v.x; v.x = -v.y; v.y = t; }
-        if (type === 'norm') { let m = Math.sqrt(v.x**2 + v.y**2); if (m > 0) { v.x /= m; v.y /= m; } }
+        else if (type === 'perp') { let t = v.x; v.x = -v.y; v.y = t; }
+        else if (type === 'norm') { let m = Math.sqrt(v.x**2+v.y**2); if (m > 0) { v.x /= m; v.y /= m; } }
+        render();
+    }
+
+    function reflect(idx) {
+        const v = vectors[idx], target = vectors[1-idx];
+        const mSq = target.x**2 + target.y**2;
+        if (mSq === 0) return;
+        const dot = v.x*target.x + v.y*target.y;
+        const projX = (dot/mSq)*target.x, projY = (dot/mSq)*target.y;
+        v.x = 2*projX - v.x; v.y = 2*projY - v.y;
         render();
     }
 
     function transpose() {
-        let temp = vectors[0].y;
-        vectors[0].y = vectors[1].x;
-        vectors[1].x = temp;
-        if (document.getElementById('unitToggle').checked) {
-            transform(0, 'norm'); transform(1, 'norm');
-        }
+        let temp = vectors[0].y; vectors[0].y = vectors[1].x; vectors[1].x = temp;
+        if (document.getElementById('unitToggle').checked) { transform(0, 'norm'); transform(1, 'norm'); }
         render();
     }
 
     function drawGrid() {
         ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = "11px monospace";
         for (let i = -5; i <= 5; i += 0.5) {
-            let isMain = (i % 1 === 0);
-            ctx.lineWidth = (i === 0) ? 2 : (isMain ? 1 : 0.5);
+            let isMain = (i % 1 === 0); ctx.lineWidth = (i === 0) ? 2 : (isMain ? 1 : 0.5);
             ctx.strokeStyle = (i === 0) ? '#475569' : '#1e293b';
             let p = center + i * scale;
             ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, 500); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(500, p); ctx.stroke();
-            if (isMain && i !== 0) {
-                ctx.fillStyle = "#64748b";
-                ctx.fillText(i, p, center + 15);
-                ctx.fillText(i, center - 15, center - i * scale);
-            }
+            if (isMain && i !== 0) { ctx.fillStyle = "#64748b"; ctx.fillText(i, p, center + 15); ctx.fillText(i, center - 15, center - i * scale); }
         }
     }
 
     function drawAngleArc(v1, v2, color, radius, isDashed = false) {
-        let a1 = Math.atan2(-v1.y, v1.x);
-        let a2 = Math.atan2(-v2.y, v2.x);
-        let diff = a2 - a1;
-        while (diff < -Math.PI) diff += Math.PI * 2;
-        while (diff > Math.PI) diff -= Math.PI * 2;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-        if (isDashed) ctx.setLineDash([5, 5]);
-        ctx.beginPath();
-        ctx.arc(center, center, radius, a1, a1 + diff, diff < 0);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        let mid = a1 + diff / 2;
-        let degLabel = Math.abs(diff * 180 / Math.PI).toFixed(1) + "°";
-        ctx.fillStyle = color;
-        ctx.font = "bold 11px monospace";
-        ctx.fillText(degLabel, center + (radius + 20) * Math.cos(mid), center + (radius + 20) * Math.sin(mid));
+        let a1 = Math.atan2(-v1.y, v1.x), a2 = Math.atan2(-v2.y, v2.x), diff = a2 - a1;
+        while (diff < -Math.PI) diff += Math.PI * 2; while (diff > Math.PI) diff -= Math.PI * 2;
+        ctx.strokeStyle = color; ctx.lineWidth = 2; if (isDashed) ctx.setLineDash([5, 5]);
+        ctx.beginPath(); ctx.arc(center, center, radius, a1, a1 + diff, diff < 0); ctx.stroke(); ctx.setLineDash([]);
+        let mid = a1 + diff / 2; ctx.fillStyle = color; ctx.font = "bold 11px monospace";
+        ctx.fillText(Math.abs(diff*180/Math.PI).toFixed(1)+"°", center+(radius+20)*Math.cos(mid), center+(radius+20)*Math.sin(mid));
+    }
+
+    // Helper to draw a single vector arrow
+    function drawArrow(x0, y0, x1, y1, color, isDotted = false) {
+        ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 4;
+        if (isDotted) { ctx.setLineDash([5, 5]); ctx.lineWidth = 2; ctx.globalAlpha = 0.4; }
+        
+        ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+        
+        const ang = Math.atan2(y0 - y1, x1 - x0);
+        ctx.beginPath(); ctx.moveTo(x1, y1);
+        ctx.lineTo(x1-15*Math.cos(ang-Math.PI/6), y1+15*Math.sin(ang-Math.PI/6));
+        ctx.lineTo(x1-15*Math.cos(ang+Math.PI/6), y1+15*Math.sin(ang+Math.PI/6));
+        ctx.fill();
+        
+        ctx.setLineDash([]); ctx.globalAlpha = 1.0;
     }
 
     function render(mode) {
-        ctx.clearRect(0, 0, 500, 500);
-        drawGrid();
-        const [A, B] = vectors;
-        drawAngleArc(A, B, "#34d399", 45, true);
-        if (hoverRot !== null) {
-            let isLocal = document.getElementById('angleModeToggle').checked;
-            let ref = isLocal ? vectors[1-hoverRot] : {x:1, y:0};
-            drawAngleArc(ref, vectors[hoverRot], "#60a5fa", 70);
-        }
+        ctx.clearRect(0, 0, 500, 500); drawGrid();
+        const [A, B] = vectors; drawAngleArc(A, B, "#34d399", 45, true);
+        if (hoverRot !== null) { let ref = document.getElementById('angleModeToggle').checked ? vectors[1-hoverRot] : {x:1, y:0}; drawAngleArc(ref, vectors[hoverRot], "#60a5fa", 70); }
+        
+        const showGhost = document.getElementById('ghostToggle').checked;
+
         vectors.forEach(v => {
-            const tx = center + v.x * scale, ty = center - v.y * scale;
-            ctx.strokeStyle = v.color; ctx.fillStyle = v.color; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.moveTo(center, center); ctx.lineTo(tx, ty); ctx.stroke();
-            const ang = Math.atan2(center - ty, tx - center);
-            ctx.beginPath(); ctx.moveTo(tx, ty);
-            ctx.lineTo(tx-15*Math.cos(ang-Math.PI/6), ty+15*Math.sin(ang-Math.PI/6));
-            ctx.lineTo(tx-15*Math.cos(ang+Math.PI/6), ty+15*Math.sin(ang+Math.PI/6));
-            ctx.fill();
+            const tx = center+v.x*scale, ty = center-v.y*scale;
+            
+            // Draw Ghost extension (Opposite direction, same orientation)
+            if (showGhost) {
+                const gx = center - v.x * scale;
+                const gy = center + v.y * scale;
+                // Line from tail back to origin, arrowhead at origin to maintain "same direction"
+                drawArrow(gx, gy, center, center, v.color, true);
+            }
+
+            // Draw Original
+            drawArrow(center, center, tx, ty, v.color);
         });
 
-        const dot = (A.x * B.x) + (A.y * B.y);
-        const magA = Math.sqrt(A.x**2 + A.y**2), magB = Math.sqrt(B.x**2 + B.y**2);
+        const dot = (A.x*B.x)+(A.y*B.y), magA = Math.sqrt(A.x**2+A.y**2), magB = Math.sqrt(B.x**2+B.y**2);
         const rad = Math.acos(Math.max(-1, Math.min(1, (magA*magB===0)?0:dot/(magA*magB))));
         const isUnit = document.getElementById('unitToggle').checked;
-
         if (mode !== 'skip-inputs') {
-            document.getElementById('ax_in').value = A.x.toFixed(2);
-            document.getElementById('ay_in').value = A.y.toFixed(2);
-            document.getElementById('bx_in').value = B.x.toFixed(2);
-            document.getElementById('by_in').value = B.y.toFixed(2);
-            document.getElementById('m00_in').value = A.x.toFixed(2);
-            document.getElementById('m10_in').value = A.y.toFixed(2);
-            document.getElementById('m01_in').value = B.x.toFixed(2);
-            document.getElementById('m11_in').value = B.y.toFixed(2);
+            document.getElementById('ax_in').value = A.x.toFixed(2); document.getElementById('ay_in').value = A.y.toFixed(2);
+            document.getElementById('bx_in').value = B.x.toFixed(2); document.getElementById('by_in').value = B.y.toFixed(2);
+            document.getElementById('m00_in').value = A.x.toFixed(2); document.getElementById('m10_in').value = A.y.toFixed(2);
+            document.getElementById('m01_in').value = B.x.toFixed(2); document.getElementById('m11_in').value = B.y.toFixed(2);
         }
-        if (mode !== 'skip-len') {
-            document.getElementById('len0_in').value = magA.toFixed(2);
-            document.getElementById('len1_in').value = magB.toFixed(2);
-            document.getElementById('slider0').value = magA;
-            document.getElementById('slider1').value = magB;
-        }
+        document.getElementById('len0_in').value = magA.toFixed(2); document.getElementById('len1_in').value = magB.toFixed(2);
+        document.getElementById('slider0').value = magA; document.getElementById('slider1').value = magB;
         if (mode !== 'skip-rot') {
             const isLocal = document.getElementById('angleModeToggle').checked;
             [0, 1].forEach(i => {
-                let ang = (Math.atan2(vectors[i].y, vectors[i].x) * 180 / Math.PI + 360) % 360;
-                if (isLocal) {
-                    let other = (Math.atan2(vectors[1-i].y, vectors[1-i].x) * 180 / Math.PI + 360) % 360;
-                    ang = (ang - other + 360) % 360;
-                }
+                let ang = (Math.atan2(vectors[i].y, vectors[i].x)*180/Math.PI+360)%360;
+                if (isLocal) { let other = (Math.atan2(vectors[1-i].y, vectors[1-i].x)*180/Math.PI+360)%360; ang = (ang-other+360)%360; }
                 document.getElementById(`rotSlider${i}`).value = Math.round(ang);
             });
         }
-
-        document.getElementById('slider0').disabled = isUnit;
-        document.getElementById('slider1').disabled = isUnit;
-        document.getElementById('len0_in').disabled = isUnit;
-        document.getElementById('len1_in').disabled = isUnit;
-
-        document.getElementById('resDot').innerText = dot.toFixed(3);
-        document.getElementById('resCos').innerText = ((magA*magB===0)?0:dot/(magA*magB)).toFixed(3);
-        document.getElementById('resDeg').innerText = (rad * 180 / Math.PI).toFixed(1);
-        document.getElementById('resRad').innerText = rad.toFixed(3);
-        document.getElementById('resPi').innerText = (rad / Math.PI).toFixed(3) + "π";
-        document.getElementById('resFrac').innerText = getFraction(rad);
+        document.getElementById('slider0').disabled = isUnit; document.getElementById('slider1').disabled = isUnit;
+        document.getElementById('len0_in').disabled = isUnit; document.getElementById('len1_in').disabled = isUnit;
+        document.getElementById('resDot').innerText = dot.toFixed(3); document.getElementById('resCos').innerText = ((magA*magB===0)?0:dot/(magA*magB)).toFixed(3);
+        document.getElementById('resDeg').innerText = (rad*180/Math.PI).toFixed(1); document.getElementById('resRad').innerText = rad.toFixed(3);
+        document.getElementById('resPi').innerText = (rad/Math.PI).toFixed(3) + "π"; document.getElementById('resFrac').innerText = getFraction(rad);
     }
 
     canvas.addEventListener('mousemove', (e) => {
-        const r = canvas.getBoundingClientRect();
-        const x = ((e.clientX - r.left) * (500 / r.width) - center) / scale;
-        const y = -((e.clientY - r.top) * (500 / r.height) - center) / scale;
+        const r = canvas.getBoundingClientRect(), x = ((e.clientX-r.left)*(500/r.width)-center)/scale, y = -((e.clientY-r.top)*(500/r.height)-center)/scale;
         document.getElementById('originCoords').innerHTML = `<span>Pos: (${x.toFixed(2)}, ${y.toFixed(2)})</span><span style="color: #34d399;">Dist: ${Math.sqrt(x*x+y*y).toFixed(2)}</span>`;
         if (activeVec) {
             let snap = parseFloat(document.getElementById('posSnapSelect').value);
-            activeVec.x = Math.round(x / snap) * snap;
-            activeVec.y = Math.round(y / snap) * snap;
-            if (document.getElementById('unitToggle').checked) {
-                transform(vectors.indexOf(activeVec), 'norm');
-            }
+            activeVec.x = Math.round(x/snap)*snap; activeVec.y = Math.round(y/snap)*snap;
+            if (document.getElementById('unitToggle').checked) transform(vectors.indexOf(activeVec), 'norm');
             render();
         }
     });
-
     canvas.addEventListener('mousedown', (e) => {
-        const r = canvas.getBoundingClientRect();
-        const mx = (e.clientX - r.left) * (500 / r.width), my = (e.clientY - r.top) * (500 / r.height);
-        vectors.forEach(v => {
-            if (Math.sqrt((mx - (center + v.x * scale))**2 + (my - (center - v.y * scale))**2) < 30) activeVec = v;
-        });
+        const r = canvas.getBoundingClientRect(), mx = (e.clientX-r.left)*(500/r.width), my = (e.clientY-r.top)*(500/r.height);
+        vectors.forEach(v => { if (Math.sqrt((mx-(center+v.x*scale))**2+(my-(center-v.y*scale))**2) < 30) activeVec = v; });
     });
-
     window.addEventListener('mouseup', () => activeVec = null);
     render();
 </script>
