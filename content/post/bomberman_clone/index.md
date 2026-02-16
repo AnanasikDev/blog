@@ -16,4 +16,4 @@ seealso:
      - https://www.youtube.com/watch?v=XYA4hTutka4 | YouTube | brand-youtube | showInList
 ---
 
-dsjfjsdlkf
+In the first block of my study at CMGT (IGAD) I made a replica of Bomberman NES in 8 weeks in C++. The assignment was to not use standard library at all, except for std::string and rand. I implemented the advanced variation and got 100/100 points.

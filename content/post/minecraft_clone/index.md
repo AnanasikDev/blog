@@ -20,4 +20,4 @@ seealso:
      - https://www.youtube.com/watch?v=bYD-nGRiF0I | YouTube | brand-youtube | showInList
 ---
 
-In Breda University of Applied Sciences (BUas) in Block B I had a solo 8-week-long project of creating a Minecraft-like game with custom engine using OpenGL. Main technical focus of the block was to work with graphics, cross-platform development (main platform was Linux-based Raspberry PI), procedural generation etc. This was my first experience with most of that.
+In Breda University of Applied Sciences (BUas) in Block B I had a solo 8-week-long project of creating a Minecraft-like game with custom C++ engine using OpenGL. Main technical focus of the block was to work with graphics, cross-platform development (main platform was Linux-based Raspberry PI), procedural generation etc. This was my first experience with most of that and I am very happy with my growth and the result. I got 94/100 points for the project.

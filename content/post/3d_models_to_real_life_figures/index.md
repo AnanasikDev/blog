@@ -115,3 +115,14 @@ As a result, I now have this lovely physical model of my beloved tiger. Its dime
 ![](images/result/img5.jpg)
 
 ## Thanks for reading!
+
+## PS: Second attempt, reflection
+
+1. Use foam PVC sheets, PVH glue
+2. Scratch the back surface of the sheets before cutting the pieces out
+3. Use pale/removable color for layout, like pencil
+4. Mark the projection of next layer onto the previous (in blender)
+5. Mark vertical (and horizontal) axis on each piece
+6. Use consistent naming convention
+7. Make font and symbols easily readable
+8. Double check all pieces
