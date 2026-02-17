@@ -21,3 +21,17 @@ seealso:
 ---
 
 In Breda University of Applied Sciences (BUas) in Block B I had a solo 8-week-long project of creating a Minecraft-like game with custom C++ engine using OpenGL. Main technical focus of the block was to work with graphics, cross-platform development (main platform was Linux-based Raspberry PI), procedural generation etc. This was my first experience with most of that and I am very happy with my growth and the result. I got 94/100 points for the project.
+
+
+![Project Manhattan](img6.png)
+![Tons of lights](img2.png)
+
+![Caves!](img3.png)
+![Night](img4.png)
+![Lakes](img5.png)
+
+![Terraria??](img1.png)
+![Taiga](img7.png)
+
+![Bind your VAOs, kids!](img8.png)
+![Runs on Raspberry PI](img9.png)

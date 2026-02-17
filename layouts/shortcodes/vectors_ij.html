@@ -1,0 +1,220 @@
+<div id="bl_container" style="background: #0f172a; color: #f8fafc; padding: 25px; border-radius: 20px; max-width: 1050px; font-family: system-ui, sans-serif; box-shadow: 0 25px 50px rgba(0,0,0,0.5); margin: 20px auto; border: 1px solid #1e293b; user-select: none;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #1e293b; padding-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <h2 style="margin: 0; color: #fbbf24; font-size: 2rem; letter-spacing: -1.5px;">&lt;BasisLab /&gt;</h2>
+            <button id="bl_resetBtn" style="background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">RESET BASIS</button>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <label class="bl_custom-checkbox"><input type="checkbox" id="bl_showGrid" checked><span>Basis Grid</span></label>
+            <label class="bl_custom-checkbox"><input type="checkbox" id="bl_showComponents" checked><span>Components</span></label>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 450px; position: relative;">
+            <canvas id="bl_basisCanvas" width="500" height="500" style="background: #020617; border-radius: 12px; border: 1px solid #334155; width: 100%; height: auto; cursor: crosshair;"></canvas>
+            <div id="bl_equationOverlay" style="position: absolute; bottom: 20px; left: 20px; background: rgba(15, 23, 42, 0.9); padding: 10px 15px; border-radius: 8px; border: 1px solid #fbbf24; font-family: monospace; font-size: 1.1rem;">
+                <span style="color: #fbbf24;">C</span> = <span id="bl_scalarAVal" style="color:#60a5fa">1.0</span><span style="color:#60a5fa">A</span> + <span id="bl_scalarBVal" style="color:#f87171">1.0</span><span style="color:#f87171">B</span>
+            </div>
+        </div>
+
+        <div style="width: 420px; display: flex; flex-direction: column; gap: 15px;">
+            <div style="background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #fbbf2444;">
+                <h4 style="margin: 0 0 15px 0; color: #fbbf24; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Linear Combination Scalars</h4>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="bl_scalar-row">
+                        <span style="color: #60a5fa; font-weight: bold; width: 80px;">Scalar (a):</span>
+                        <input type="range" id="bl_input_a" min="-3" max="3" step="0.1" value="1" style="flex: 1;">
+                        <span id="bl_label_a" style="width: 40px; text-align: right; font-family: monospace;">1.0</span>
+                    </div>
+                    <div class="bl_scalar-row">
+                        <span style="color: #f87171; font-weight: bold; width: 80px;">Scalar (b):</span>
+                        <input type="range" id="bl_input_b" min="-3" max="3" step="0.1" value="1" style="flex: 1;">
+                        <span id="bl_label_b" style="width: 40px; text-align: right; font-family: monospace;">1.0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155;">
+                <h4 style="margin: 0 0 15px 0; color: #34d399; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Transformation Matrix [A | B]</h4>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                    <div style="font-size: 3rem; color: #64748b;">[</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="text" id="bl_m00" class="bl_mat-in" style="color: #60a5fa;">
+                        <input type="text" id="bl_m01" class="bl_mat-in" style="color: #f87171;">
+                        <input type="text" id="bl_m10" class="bl_mat-in" style="color: #60a5fa;">
+                        <input type="text" id="bl_m11" class="bl_mat-in" style="color: #f87171;">
+                    </div>
+                    <div style="font-size: 3rem; color: #64748b;">]</div>
+                </div>
+                <div style="text-align: center; margin-top: 10px; font-size: 0.8rem; color: #64748b; font-family: monospace;">
+                    Det: <span id="bl_detVal">1.00</span>
+                </div>
+            </div>
+
+            <div style="background: #020617; padding: 20px; border-radius: 12px; border: 1px solid #334155;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="color: #fbbf24; font-weight: bold;">Vector C Result</span>
+                    <span id="bl_vecC_coords" style="font-family: monospace; color: #94a3b8;">(1.00, 1.00)</span>
+                </div>
+                <div style="font-size: 0.85rem; color: #64748b; line-height: 1.5;">
+                    <div id="bl_calcStep1"></div>
+                    <div id="bl_calcStep2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bl_custom-checkbox { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #94a3b8; font-size: 0.9rem; }
+    .bl_custom-checkbox input { appearance: none; width: 16px; height: 16px; border: 2px solid #334155; border-radius: 4px; background: #0f172a; cursor: pointer; position: relative; }
+    .bl_custom-checkbox input:checked { background: #fbbf24; border-color: #fbbf24; }
+    .bl_custom-checkbox input:checked::after { content: '✓'; position: absolute; color: #0f172a; font-size: 11px; font-weight: bold; left: 2px; top: -1px; }
+    .bl_scalar-row { display: flex; align-items: center; gap: 10px; }
+    #bl_container input[type=range] { accent-color: #fbbf24; cursor: pointer; }
+    .bl_mat-in { 
+        width: 60px; background: #0f172a; border: 1px solid #334155; 
+        border-radius: 4px; padding: 8px; text-align: center; 
+        font-family: monospace; font-size: 1.1rem; outline: none;
+    }
+    .bl_mat-in:focus { border-color: #fbbf24; }
+</style>
+
+<script>
+(function() {
+    const canvas = document.getElementById('bl_basisCanvas');
+    const ctx = canvas.getContext('2d');
+    const center = 250, scale = 70;
+
+    let basis = {
+        A: {x: 1, y: 0, color: '#60a5fa'},
+        B: {x: 0, y: 1, color: '#f87171'}
+    };
+    let activeBasis = null;
+
+    // Grab elements
+    const inputA = document.getElementById('bl_input_a');
+    const inputB = document.getElementById('bl_input_b');
+    const showGrid = document.getElementById('bl_showGrid');
+    const showComp = document.getElementById('bl_showComponents');
+    const m00 = document.getElementById('bl_m00');
+    const m01 = document.getElementById('bl_m01');
+    const m10 = document.getElementById('bl_m10');
+    const m11 = document.getElementById('bl_m11');
+
+    function resetBasis() {
+        basis.A = {x: 1, y: 0, color: '#60a5fa'};
+        basis.B = {x: 0, y: 1, color: '#f87171'};
+        inputA.value = 1;
+        inputB.value = 1;
+        render();
+    }
+
+    function updateMatrix() {
+        basis.A.x = parseFloat(m00.value) || 0;
+        basis.B.x = parseFloat(m01.value) || 0;
+        basis.A.y = parseFloat(m10.value) || 0;
+        basis.B.y = parseFloat(m11.value) || 0;
+        render('skip-mat');
+    }
+
+    function drawArrow(x0, y0, x1, y1, color, width = 4, alpha = 1) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = width;
+        ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+        const ang = Math.atan2(y0 - y1, x1 - x0);
+        ctx.beginPath(); ctx.moveTo(x1, y1);
+        ctx.lineTo(x1-12*Math.cos(ang-Math.PI/6), y1+12*Math.sin(ang-Math.PI/6));
+        ctx.lineTo(x1-12*Math.cos(ang+Math.PI/6), y1+12*Math.sin(ang+Math.PI/6));
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function render(mode) {
+        ctx.clearRect(0, 0, 500, 500);
+        const a = parseFloat(inputA.value);
+        const b = parseFloat(inputB.value);
+        
+        ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+        for(let i=-10; i<=10; i++) {
+            ctx.beginPath(); ctx.moveTo(center+i*scale, 0); ctx.lineTo(center+i*scale, 500); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, center+i*scale); ctx.lineTo(500, center+i*scale); ctx.stroke();
+        }
+
+        if(showGrid.checked) {
+            ctx.strokeStyle = '#334155'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+            for(let i=-5; i<=5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(center + (i*basis.B.x - 10*basis.A.x)*scale, center - (i*basis.B.y - 10*basis.A.y)*scale);
+                ctx.lineTo(center + (i*basis.B.x + 10*basis.A.x)*scale, center - (i*basis.B.y + 10*basis.A.y)*scale);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(center + (i*basis.A.x - 10*basis.B.x)*scale, center - (i*basis.A.y - 10*basis.B.y)*scale);
+                ctx.lineTo(center + (i*basis.A.x + 10*basis.B.x)*scale, center - (i*basis.A.y + 10*basis.B.y)*scale);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+        }
+
+        const Ax = basis.A.x * scale, Ay = -basis.A.y * scale;
+        const Bx = basis.B.x * scale, By = -basis.B.y * scale;
+        
+        if(showComp.checked) {
+            drawArrow(center, center, center + a*Ax, center + a*Ay, basis.A.color, 2, 0.4);
+            drawArrow(center + a*Ax, center + a*Ay, center + a*Ax + b*Bx, center + a*Ay + b*By, basis.B.color, 2, 0.4);
+        }
+
+        drawArrow(center, center, center + Ax, center + Ay, basis.A.color, 5);
+        drawArrow(center, center, center + Bx, center + By, basis.B.color, 5);
+
+        const Cx = a*basis.A.x + b*basis.B.x;
+        const Cy = a*basis.A.y + b*basis.B.y;
+        drawArrow(center, center, center + Cx*scale, center - Cy*scale, '#fbbf24', 6);
+
+        document.getElementById('bl_label_a').innerText = a.toFixed(1);
+        document.getElementById('bl_label_b').innerText = b.toFixed(1);
+        document.getElementById('bl_scalarAVal').innerText = a.toFixed(1);
+        document.getElementById('bl_scalarBVal').innerText = b.toFixed(1);
+        document.getElementById('bl_vecC_coords').innerText = `(${Cx.toFixed(2)}, ${Cy.toFixed(2)})`;
+        
+        if(mode !== 'skip-mat') {
+            m00.value = basis.A.x.toFixed(2);
+            m01.value = basis.B.x.toFixed(2);
+            m10.value = basis.A.y.toFixed(2);
+            m11.value = basis.B.y.toFixed(2);
+        }
+
+        const det = (basis.A.x * basis.B.y) - (basis.B.x * basis.A.y);
+        document.getElementById('bl_detVal').innerText = det.toFixed(2);
+        document.getElementById('bl_detVal').style.color = Math.abs(det) < 0.01 ? '#f87171' : '#34d399';
+
+        document.getElementById('bl_calcStep1').innerText = `x: ${a.toFixed(1)}(${basis.A.x.toFixed(2)}) + ${b.toFixed(1)}(${basis.B.x.toFixed(2)}) = ${Cx.toFixed(2)}`;
+        document.getElementById('bl_calcStep2').innerText = `y: ${a.toFixed(1)}(${basis.A.y.toFixed(2)}) + ${b.toFixed(1)}(${basis.B.y.toFixed(2)}) = ${Cy.toFixed(2)}`;
+    }
+
+    // Event Listeners
+    document.getElementById('bl_resetBtn').addEventListener('click', resetBasis);
+    [inputA, inputB, showGrid, showComp].forEach(el => el.addEventListener('input', () => render()));
+    [m00, m01, m10, m11].forEach(el => el.addEventListener('input', updateMatrix));
+
+    canvas.addEventListener('mousedown', e => {
+        const r = canvas.getBoundingClientRect(), mx = (e.clientX-r.left)*(500/r.width), my = (e.clientY-r.top)*(500/r.height);
+        if(Math.sqrt((mx-(center+basis.A.x*scale))**2+(my-(center-basis.A.y*scale))**2) < 25) activeBasis = 'A';
+        else if(Math.sqrt((mx-(center+basis.B.x*scale))**2+(my-(center-basis.B.y*scale))**2) < 25) activeBasis = 'B';
+    });
+    window.addEventListener('mousemove', e => {
+        if(!activeBasis) return;
+        const r = canvas.getBoundingClientRect(), 
+              x = Math.round((((e.clientX-r.left)*(500/r.width)-center)/scale)*4)/4, 
+              y = Math.round((-((e.clientY-r.top)*(500/r.height)-center)/scale)*4)/4;
+        basis[activeBasis].x = x; basis[activeBasis].y = y;
+        render();
+    });
+    window.addEventListener('mouseup', () => activeBasis = null);
+
+    render();
+})();
+</script>

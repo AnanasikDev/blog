@@ -12,7 +12,7 @@ tags:
 
 How long your new password should be so you never need to worry about getting an email one night saying that there is an unauthorized entry to your account? Not mentioning all other necessities of digital security, such as two-factor authentication, biometrics and some sane amount of suspicion towards external links and files, I will focus on passwords only.
 
-* > Important side note: some enclosed systems, such as a piece of hardware or banks will only allow a limited number of checks, be that 5 or 10, which makes the following essay pretty much meaningless, because a password of length 2 is already very unlikely to be cracked within this set of attempts.*
+> Important side note: some enclosed systems, such as a piece of hardware or banks will only allow a limited number of checks, be that 5 or 10, which makes the following essay pretty much meaningless, because a password of length 2 is already very unlikely to be cracked within this set of attempts.
 
 1. So why not just make your password 1000 characters long? Or maybe even 100 to still beat any cutting-edge technology to an impossible task?
 

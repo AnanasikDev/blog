@@ -1,0 +1,200 @@
+<div class="am-wrapper">
+    <div class="am-header">
+        <div class="am-title-group">
+            <h2>&lt;BioAtlas /&gt;</h2>
+            <button onclick="amResetMap()">RESET VIEW</button>
+        </div>
+        <div class="am-status-group">
+            <div class="am-tag"><span id="am-hover-region">Global View</span></div>
+            <div class="am-tag"><span>Lat/Lon:</span> <span id="am-coord-disp" style="color: #60a5fa;">0.00, 0.00</span></div>
+        </div>
+    </div>
+
+    <div class="am-main-grid">
+        <div class="am-map-container">
+            <svg id="am-globe-svg"></svg>
+            <div class="am-globe-overlay"></div>
+        </div>
+
+        <div class="am-sidebar">
+            <div class="am-info-box">
+                <div class="am-info-header">
+                    <h3 id="am-sidebar-title">Identity</h3>
+                    <span id="am-sidebar-subtitle">Select a species to begin</span>
+                </div>
+                <div id="am-info-content" class="am-scroll-area">
+                    <div class="am-placeholder">
+                        <p>Loading database...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="am-slider-container">
+        <div id="am-animal-slider"></div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --am-bg-dark: #0f172a; --am-bg-panel: #1e293b; --am-border: #334155;
+        --am-text-main: #f8fafc; --am-text-muted: #94a3b8;
+        --am-accent-green: #34d399; --am-accent-blue: #60a5fa; --am-accent-red: #f87171;
+    }
+
+    .am-wrapper {
+        background: var(--am-bg-dark); color: var(--am-text-main);
+        padding: 25px; border-radius: 20px; max-width: 1100px;
+        margin: 20px auto; border: 1px solid var(--am-border);
+        font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    .am-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--am-border); padding-bottom: 15px; }
+    .am-title-group h2 { margin: 0; color: var(--am-accent-green); font-family: monospace; font-size: 1.8rem; }
+    .am-title-group button { background: none; border: 1px solid var(--am-accent-red); color: var(--am-accent-red); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 700; transition: 0.2s; }
+    .am-title-group button:hover { background: rgba(248, 113, 113, 0.1); }
+
+    .am-main-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; height: 500px; }
+    .am-map-container { background: #020617; border-radius: 12px; position: relative; overflow: hidden; border: 1px solid var(--am-border); cursor: grab; }
+    #am-globe-svg { width: 100%; height: 100%; }
+
+    .am-habitat-poly {
+        fill: var(--am-accent-green); fill-opacity: 0.35;
+        stroke: var(--am-accent-green); stroke-width: 2.5px;
+        filter: drop-shadow(0 0 12px var(--am-accent-green));
+        pointer-events: none;
+        stroke-linejoin: round;
+    }
+
+    .am-land { fill: #1e293b; stroke: #334155; stroke-width: 0.4px; transition: fill 0.2s; }
+    .am-land:hover { fill: #2d3a4f; }
+
+    .am-sidebar { height: 100%; }
+    .am-info-box { background: var(--am-bg-panel); border-radius: 12px; height: 100%; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--am-border); }
+    .am-info-header { padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--am-border); }
+    .am-info-header h3 { margin: 0; color: var(--am-accent-blue); font-size: 1.2rem; }
+    .am-scroll-area { padding: 15px; overflow-y: auto; flex: 1; scroll-behavior: smooth; }
+
+    .am-img-sync { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--am-border); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .am-sidebar-desc { font-size: 0.95rem; line-height: 1.6; color: var(--am-text-muted); }
+
+    .am-slider-container { margin-top: 20px; padding: 12px; background: var(--am-bg-panel); border-radius: 12px; border: 1px solid var(--am-border); }
+    #am-animal-slider { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; }
+    #am-animal-slider::-webkit-scrollbar { height: 6px; }
+    #am-animal-slider::-webkit-scrollbar-thumb { background: var(--am-border); border-radius: 10px; }
+
+    .am-slide-item { flex: 0 0 85px; cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; }
+    .am-slide-item:hover { transform: translateY(-5px); }
+    .am-slide-item img { width: 85px; height: 85px; object-fit: cover; border-radius: 12px; border: 2px solid transparent; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    .am-slide-item.active img { border-color: var(--am-accent-green); transform: scale(1.05); }
+    .am-slide-item span { font-size: 0.7rem; display: block; margin-top: 6px; color: var(--am-text-muted); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .am-placeholder { text-align: center; color: var(--am-text-muted); margin-top: 40px; }
+</style>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://unpkg.com/topojson@3"></script>
+
+<script>
+    let svg, gMap, gOverlay, projection, pathGen, animalDatabase = [];
+
+    async function init() {
+        const container = document.querySelector('.am-map-container');
+        const w = container.clientWidth, h = container.clientHeight;
+        
+        svg = d3.select("#am-globe-svg").attr("viewBox", `0 0 ${w} ${h}`);
+        projection = d3.geoOrthographic().scale(h/2.1).translate([w/2, h/2]).precision(0.1);
+        pathGen = d3.geoPath().projection(projection);
+
+        gMap = svg.append("g");
+        gOverlay = svg.append("g");
+
+        // Load World Geometry
+        const world = await d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");
+        const countries = topojson.feature(world, world.objects.countries).features;
+        
+        gMap.selectAll("path").data(countries).enter().append("path")
+            .attr("class", "am-land").attr("d", pathGen)
+            .on("mouseover", (e, d) => {
+                document.getElementById('am-hover-region').innerText = d.properties.name;
+            });
+
+        // Load Animal Database
+        try {
+            animalDatabase = await d3.json("posts/animals_map/db.json");
+            renderSlider();
+            document.querySelector('.am-placeholder p').innerText = "Select a species to explore";
+        } catch (e) {
+            console.error("DB Load Error:", e);
+            document.querySelector('.am-placeholder p').innerText = "Error loading database.";
+        }
+
+        // Drag functionality
+        svg.call(d3.drag().on('drag', (event) => {
+            const r = projection.rotate();
+            projection.rotate([r[0] + event.dx * 0.25, r[1] - event.dy * 0.25]);
+            redraw();
+            updateCoordDisp();
+        }));
+    }
+
+    function redraw() { svg.selectAll("path").attr("d", pathGen); }
+
+    function updateCoordDisp() {
+        const r = projection.rotate();
+        document.getElementById('am-coord-disp').innerText = `${(-r[1]).toFixed(1)}, ${(-r[0]).toFixed(1)}`;
+    }
+
+    function renderSlider() {
+        const slider = document.getElementById('am-animal-slider');
+        animalDatabase.forEach(anim => {
+            const div = document.createElement('div');
+            div.className = 'am-slide-item';
+            div.innerHTML = `<img src="${anim.img}"><span>${anim.name}</span>`;
+            div.onclick = () => selectAnimal(anim, div);
+            slider.appendChild(div);
+        });
+    }
+
+    function selectAnimal(anim, element) {
+        document.querySelectorAll('.am-slide-item').forEach(i => i.classList.remove('active'));
+        element.classList.add('active');
+        
+        // Flight to target
+        d3.transition().duration(1200).ease(d3.easeCubicInOut).tween("rotate", () => {
+            const i = d3.interpolate(projection.rotate(), [-anim.center[0], -anim.center[1]]);
+            return t => { projection.rotate(i(t)); redraw(); };
+        });
+
+        // Render Habitat - FIXED WINDING
+        gOverlay.selectAll("*").remove();
+        gOverlay.append("path")
+            .datum({ type: "Feature", geometry: { type: "Polygon", coordinates: anim.geo } })
+            .attr("class", "am-habitat-poly")
+            .attr("d", pathGen);
+
+        updateSidebar(anim);
+    }
+
+    function updateSidebar(anim) {
+        const content = document.getElementById('am-info-content');
+        document.getElementById('am-sidebar-title').innerText = anim.name;
+        document.getElementById('am-sidebar-subtitle').innerText = "Species Profile";
+        content.innerHTML = `
+            <img src="${anim.img}" class="am-img-sync">
+            <div class="am-sidebar-desc">${anim.desc}</div>
+            <a href="${anim.wiki}" target="_blank" style="color:var(--am-accent-blue); font-size:0.8rem; display:block; margin-top:15px; font-weight:700; text-decoration:none;">RESEARCH SOURCE ↗</a>
+        `;
+    }
+
+    function amResetMap() {
+        d3.transition().duration(1000).tween("rotate", () => {
+            const i = d3.interpolate(projection.rotate(), [0, 0]);
+            return t => { projection.rotate(i(t)); redraw(); };
+        });
+        gOverlay.selectAll("*").remove();
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+</script>

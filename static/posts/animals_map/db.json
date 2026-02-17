@@ -1,0 +1,52 @@
+[
+  {
+    "id": "panda",
+    "name": "Giant Panda",
+    "img": "https://images.unsplash.com/photo-1564349683136-77e08bef1ef1?q=80&w=800&auto=format&fit=crop",
+    "desc": "Found in the bamboo forests of the Sichuan, Shaanxi, and Gansu provinces of China.",
+    "wiki": "https://en.wikipedia.org/wiki/Giant_panda",
+    "iso": ["CHN"],
+    "center": [103, 30],
+    "geo": [[[100, 35], [105, 35], [108, 30], [105, 25], [100, 25], [98, 30], [100, 35]]]
+  },
+  {
+    "id": "snow_leopard",
+    "name": "Snow Leopard",
+    "img": "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?q=80&w=800&auto=format&fit=crop",
+    "desc": "The 'Ghost of the Mountains' inhabits the rugged alpine landscapes of Central Asia.",
+    "wiki": "https://en.wikipedia.org/wiki/Snow_leopard",
+    "iso": ["MNG", "CHN", "NPL", "KGZ"],
+    "center": [90, 42],
+    "geo": [[[75, 45], [100, 50], [110, 40], [95, 30], [75, 30], [70, 40], [75, 45]]]
+  },
+  {
+    "id": "african_elephant",
+    "name": "African Elephant",
+    "img": "https://images.unsplash.com/photo-1581084324492-c8076f130f86?q=80&w=800&auto=format&fit=crop",
+    "desc": "The largest land mammal, ranging across sub-Saharan Africa's savannas and forests.",
+    "wiki": "https://en.wikipedia.org/wiki/African_elephant",
+    "iso": ["BWA", "KEN", "ZAF", "NAM"],
+    "center": [25, -5],
+    "geo": [[[10, 10], [40, 15], [45, -5], [35, -30], [15, -30], [5, -10], [10, 10]]]
+  },
+  {
+    "id": "platypus",
+    "name": "Platypus",
+    "img": "https://images.unsplash.com/photo-1518005423533-899659f81f1e?q=80&w=800&auto=format&fit=crop",
+    "desc": "A unique egg-laying mammal endemic to the river systems of Eastern Australia.",
+    "wiki": "https://en.wikipedia.org/wiki/Platypus",
+    "iso": ["AUS"],
+    "center": [148, -30],
+    "geo": [[[145, -15], [155, -25], [153, -40], [140, -42], [145, -15]]]
+  },
+  {
+    "id": "polar_bear",
+    "name": "Polar Bear",
+    "img": "https://images.unsplash.com/photo-1589656966895-2f33e7653819?q=80&w=800&auto=format&fit=crop",
+    "desc": "Inhabiting the Arctic Circle, these bears rely on sea ice to hunt seals.",
+    "wiki": "https://en.wikipedia.org/wiki/Polar_bear",
+    "iso": ["CAN", "RUS", "GRL", "USA", "NOR"],
+    "center": [0, 80],
+    "geo": [[[-180, 70], [0, 65], [180, 70], [180, 89], [-180, 89], [-180, 70]]]
+  }
+]
