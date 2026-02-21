@@ -3,7 +3,7 @@
     {{/* 
         Enable the right sidebar if
             - Widget different from 'TOC' is enabled
-            - TOC is enabled and not empty
+            - TOC is enabled and not empty (or forced to show by page setting)
     */}}
     {{- $HasWidgetNotTOC := false -}}
     {{- $TOCWidgetEnabled := false -}}
@@ -15,9 +15,9 @@
         {{- end -}}
     {{- end -}}
 
-    {{- $TOCManuallyDisabled := eq .Params.toc false -}}
-    {{- $TOCEnabled := and (not $TOCManuallyDisabled) $TOCWidgetEnabled -}}
-    {{- $hasTOC := ge (len .TableOfContents) 100 -}}
+    {{- $TOCPageSetting := .Params.toc -}}
+    {{- $TOCEnabled := ne $TOCPageSetting "never" -}}
+    {{- $hasTOC := or (ge (len .TableOfContents) 100) (eq $TOCPageSetting "always") -}}
     {{- .Scratch.Set "TOCEnabled" (and $TOCEnabled $hasTOC) -}}
     
     {{- .Scratch.Set "hasWidget" (or $HasWidgetNotTOC (and $TOCEnabled $hasTOC)) -}}
