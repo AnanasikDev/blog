@@ -1,0 +1,284 @@
+<div class="vl-container">
+    <div class="vl-toolbar">
+        <div class="vl-brand">
+            <h2><span class="text-emerald">&lt;VoxelLab /&gt;</span></h2>
+            <button class="vl-reset" onclick="location.reload()">RESET</button>
+        </div>
+        <div class="vl-settings">
+            <div class="vl-control-item">
+                <label>Grid: <span id="gridVal" class="text-emerald">32</span></label>
+                <input type="range" id="resSlider" min="8" max="128" step="4" value="32">
+            </div>
+            <div class="vl-control-item">
+                <label>Gap: <span id="gapVal" class="text-emerald">0.1</span></label>
+                <input type="range" id="gapSlider" min="0" max="0.5" step="0.05" value="0.1">
+            </div>
+            <label class="vl-checkbox"><input type="checkbox" id="colorToggle"><span>Inherit Colors</span></label>
+            <button class="vl-btn-primary" onclick="document.getElementById('fileInput').click()">LOAD .OBJ</button>
+            <input type="file" id="fileInput" hidden accept=".obj">
+        </div>
+    </div>
+
+    <div class="vl-main">
+        <div id="canvas-container" class="vl-viewport">
+            <div id="drop-prompt" class="vl-overlay">
+                <div class="prompt-box">
+                    <span class="prompt-icon">📦</span>
+                    <p>Drop .OBJ file here or click Load</p>
+                </div>
+            </div>
+            <div id="stats-overlay">Engine Idle</div>
+        </div>
+
+        <div class="vl-sidebar">
+            <div class="vl-panel">
+                <div class="vl-panel-header">VOXEL DATA OUTPUT</div>
+                <textarea id="outputArea" readonly placeholder="Coordinates..."></textarea>
+                <div class="vl-actions">
+                    <button class="vl-tool-btn" onclick="copyText()">COPY DATA</button>
+                    <button class="vl-tool-btn" onclick="downloadVox()">EXPORT .VOX</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root { --bg: #0f172a; --panel: #020617; --accent: #34d399; --blue: #60a5fa; --border: #1e293b; --text: #f8fafc; --sub: #94a3b8; }
+    .vl-container { background: var(--bg); color: var(--text); padding: 25px; border-radius: 20px; max-width: 1200px; font-family: system-ui, -apple-system, sans-serif; border: 1px solid var(--border); margin: 20px auto; box-shadow: 0 25px 50px rgba(0,0,0,0.5); user-select: none; }
+    .vl-toolbar { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 20px; margin-bottom: 25px; flex-wrap: wrap; gap: 20px; }
+    .vl-brand { display: flex; align-items: center; gap: 20px; }
+    .vl-brand h2 { margin: 0; font-size: 1.8rem; letter-spacing: -1.5px; }
+    .text-emerald { color: var(--accent); font-weight: bold; }
+    .vl-reset { background: var(--border); color: #f87171; border: 1px solid #f8717144; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+    
+    .vl-settings { display: flex; gap: 25px; align-items: center; }
+    .vl-control-item { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+    .vl-control-item label { font-size: 0.75rem; color: var(--sub); text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    /* Custom Slider Styling */
+    input[type=range] { -webkit-appearance: none; background: var(--border); height: 4px; border-radius: 2px; outline: none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--bg); }
+
+    .vl-btn-primary { background: var(--accent); color: var(--bg); border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
+    .vl-btn-primary:active { transform: scale(0.95); }
+
+    .vl-main { display: flex; gap: 20px; height: 600px; }
+    .vl-viewport { flex: 1; background: var(--panel); border-radius: 12px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+    
+    .vl-overlay { position: absolute; inset: 0; background: rgba(2, 6, 23, 0.8); display: flex; align-items: center; justify-content: center; z-index: 10; transition: opacity 0.3s; }
+    .prompt-box { border: 2px dashed var(--border); padding: 40px; border-radius: 20px; text-align: center; color: var(--sub); }
+    .prompt-icon { font-size: 3rem; display: block; margin-bottom: 10px; }
+
+    #stats-overlay { position: absolute; bottom: 15px; left: 15px; font-family: monospace; background: rgba(15, 23, 42, 0.8); padding: 8px 12px; border-radius: 6px; font-size: 12px; color: var(--accent); border: 1px solid var(--border); }
+    
+    .vl-sidebar { width: 350px; display: flex; flex-direction: column; }
+    .vl-panel { background: var(--panel); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: 12px; padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .vl-panel-header { font-size: 0.8rem; font-weight: bold; color: var(--sub); margin-bottom: 12px; letter-spacing: 1px; }
+    #outputArea { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--accent); font-family: 'Fira Code', monospace; font-size: 0.85rem; padding: 12px; resize: none; outline: none; margin-bottom: 15px; }
+    
+    .vl-actions { display: flex; gap: 10px; }
+    .vl-tool-btn { flex: 1; background: var(--bg); color: var(--sub); border: 1px solid var(--border); padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+    .vl-tool-btn:hover { border-color: var(--accent); color: white; }
+    .vl-checkbox { display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--sub); font-size: 0.85rem; }
+    .vl-checkbox input { accent-color: var(--accent); width: 16px; height: 16px; }
+</style>
+
+<script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+
+    let scene, camera, renderer, controls, activeModel, voxelMesh;
+    const container = document.getElementById('canvas-container');
+    const resSlider = document.getElementById('resSlider');
+    const gapSlider = document.getElementById('gapSlider');
+
+    init();
+
+    function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(8, 8, 8);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        const sun = new THREE.DirectionalLight(0xffffff, 1);
+        sun.position.set(5, 10, 5);
+        scene.add(sun);
+
+        window.addEventListener('resize', onWindowResize);
+        
+        // Listeners for real-time updates
+        resSlider.addEventListener('input', (e) => {
+            document.getElementById('gridVal').innerText = e.target.value;
+            if (activeModel) debounceVoxelize();
+        });
+
+        gapSlider.addEventListener('input', (e) => {
+            document.getElementById('gapVal').innerText = e.target.value;
+            if (activeModel) updateVoxelSpacing();
+        });
+
+        animate();
+    }
+
+    // Load Logic
+    document.getElementById('fileInput').addEventListener('change', handleFile);
+    container.addEventListener('dragover', e => e.preventDefault());
+    container.addEventListener('drop', e => { e.preventDefault(); handleFile({target:{files:e.dataTransfer.files}}); });
+
+    function handleFile(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const loader = new OBJLoader();
+            const object = loader.parse(event.target.result);
+            setupModel(object);
+            document.getElementById('drop-prompt').style.opacity = '0';
+            setTimeout(() => document.getElementById('drop-prompt').style.display = 'none', 300);
+        };
+        reader.readAsText(file);
+    }
+
+    function setupModel(object) {
+        if (activeModel) scene.remove(activeModel);
+        if (voxelMesh) scene.remove(voxelMesh);
+
+        // Center and scale model
+        const bbox = new THREE.Box3().setFromObject(object);
+        const center = bbox.getCenter(new THREE.Vector3());
+        object.position.sub(center);
+        
+        activeModel = object;
+        activeModel.visible = false; // Original mesh is hidden by default in this view
+        scene.add(activeModel);
+        voxelize();
+    }
+
+    let timer;
+    function debounceVoxelize() {
+        clearTimeout(timer);
+        timer = setTimeout(voxelize, 150);
+    }
+
+    function voxelize() {
+        if (!activeModel) return;
+        if (voxelMesh) scene.remove(voxelMesh);
+
+        const res = parseInt(resSlider.value);
+        const gap = parseFloat(gapSlider.value);
+        const useColor = document.getElementById('colorToggle').checked;
+        
+        const bbox = new THREE.Box3().setFromObject(activeModel);
+        const size = bbox.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const step = maxDim / res;
+        
+        const boxGeo = new THREE.BoxGeometry(step, step, step);
+        const material = new THREE.MeshPhongMaterial({ vertexColors: useColor });
+        
+        const grid = [];
+        const raycaster = new THREE.Raycaster();
+        const dummy = new THREE.Object3D();
+        const colors = [];
+        const tempColor = new THREE.Color();
+
+        let count = 0;
+        
+        // Voxelization Scan
+        for (let x = 0; x < res; x++) {
+            for (let y = 0; y < res; y++) {
+                for (let z = 0; z < res; z++) {
+                    const px = bbox.min.x + (x * step) + step/2;
+                    const py = bbox.min.y + (y * step) + step/2;
+                    const pz = bbox.min.z + (z * step) + step/2;
+
+                    raycaster.set(new THREE.Vector3(px, py, pz), new THREE.Vector3(0, 1, 0));
+                    const hits = raycaster.intersectObject(activeModel, true);
+
+                    if (hits.length % 2 !== 0) {
+                        grid.push(`${x},${y},${z}`);
+                        count++;
+                    }
+                }
+            }
+        }
+
+        voxelMesh = new THREE.InstancedMesh(boxGeo, material, count);
+        
+        let idx = 0;
+        grid.forEach(coord => {
+            const [cx, cy, cz] = coord.split(',').map(Number);
+            const px = bbox.min.x + (cx * step) + step/2;
+            const py = bbox.min.y + (cy * step) + step/2;
+            const pz = bbox.min.z + (cz * step) + step/2;
+            
+            // Apply Visual Gap via scaling
+            const visualScale = 1 - gap;
+            dummy.scale.set(visualScale, visualScale, visualScale);
+            dummy.position.set(px, py, pz);
+            dummy.updateMatrix();
+            voxelMesh.setMatrixAt(idx, dummy.matrix);
+
+            if (useColor) {
+                // Simplified color sampling: uses first intersect or default emerald
+                tempColor.set(0x34d399); 
+                voxelMesh.setColorAt(idx, tempColor);
+            }
+            idx++;
+        });
+
+        scene.add(voxelMesh);
+        document.getElementById('outputArea').value = grid.join('\n');
+        document.getElementById('stats-overlay').innerText = `Voxels: ${count} | Step: ${step.toFixed(3)}`;
+    }
+
+    function updateVoxelSpacing() {
+        if (!voxelMesh) return;
+        const gap = parseFloat(gapSlider.value);
+        const dummy = new THREE.Object3D();
+        const mat = new THREE.Matrix4();
+        
+        for (let i = 0; i < voxelMesh.count; i++) {
+            voxelMesh.getMatrixAt(i, mat);
+            dummy.position.setFromMatrixPosition(mat);
+            const s = 1 - gap;
+            dummy.scale.set(s, s, s);
+            dummy.updateMatrix();
+            voxelMesh.setMatrixAt(i, dummy.matrix);
+        }
+        voxelMesh.instanceMatrix.needsUpdate = true;
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    window.copyText = () => {
+        const area = document.getElementById('outputArea');
+        area.select();
+        document.execCommand('copy');
+    };
+</script>

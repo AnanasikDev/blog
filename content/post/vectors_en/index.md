@@ -25,6 +25,4 @@ This principle is called *linear independency*, and those values X and Y are cal
 
 {{< vectors_sandbox >}}
 
-
-
 The app was made using Google Gemini.
