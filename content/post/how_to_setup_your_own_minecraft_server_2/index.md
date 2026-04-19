@@ -295,6 +295,10 @@ Once everything works, you realize that a Raspberry Pi is slow and weak. So let'
 
 First, download the .jar file of the papermc. Either by downloading it manually from [papermc.io](https://papermc.io/downloads/paper) and `scp`-ing from your machine to the server, or get it on the Linux directly using `wget` for example.
 
+### Make a bootup script
+
+Note, that this script will be redundant if you decide to do Step 13.
+
 Make a bash script `start.sh` in your server directory:
 
 ```sh
