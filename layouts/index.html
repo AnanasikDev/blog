@@ -3,12 +3,22 @@
     {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
     {{ $filtered := ($pages | intersect $notHidden) }}
     {{ $pag := .Paginate ($filtered) }}
-
-    <section class="article-list">
-        {{ range $index, $element := $pag.Pages }}
-            {{ partial "article-list/default" . }}
-        {{ end }}
-    </section>
+    
+    {{ $isGallery := eq .Site.Params.view.paging "gallery" }}
+    {{ if $isGallery}}
+        hehehehhe
+        <section class="article-gallery">
+            {{ range $index, $element := $pag.Pages }}
+                {{ partial "article-list/gallery" . }}
+            {{ end }}
+        </section>
+    {{ else }}
+        <section class="article-list">
+            {{ range $index, $element := $pag.Pages }}
+                {{ partial "article-list/default" . }}
+            {{ end }}
+        </section>
+    {{ end }}
 
     {{- partial "pagination.html" . -}}
     {{- partial "footer/footer" . -}}

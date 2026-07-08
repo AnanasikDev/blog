@@ -32,17 +32,16 @@ url = "https://www.youtube.com/@ananaseek"
 icon = "brand-youtube"
 
 [[social]]
-identifier = "artstation"
-name = "Artstation"
-url = "https://www.artstation.com/ananasikfurry"
-
-[social.params]
-icon = "brand-artstation"
-
-[[social]]
 identifier = "itchdotio"
 name = "Itch.io"
 url = "https://ananasikdeveloper.itch.io/"
 
 [social.params]
 icon = "brand-itchdotio"
+
+[[main]]
+    name = "Portfolio"
+    url = "/gallery"
+    weight = 30
+    [main.params]
+        icon = "portfolio"

@@ -29,3 +29,9 @@ a {
         color: var(--body-text-color);
     }
 }
+
+.paging-gallery-item {
+    width: 20%;
+    max-height: 30%;
+    display: inline;
+}

@@ -1,0 +1,42 @@
+<div class="article-details">
+    {{ if .Params.categories }}
+    <header class="article-category">
+        {{ range (.GetTerms "categories") }}
+            <a href="{{ .RelPermalink }}" {{ with .Params.style }}style="background-color: {{ .background }}; color: {{ .color }};"{{ end }}>
+                {{ .LinkTitle }}
+            </a>
+        {{ end }}
+    </header>
+    {{ end }}
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="{{ .RelPermalink }}">
+                {{- .Title -}}
+            </a>
+        </h2>
+    
+        {{ with .Params.description }}
+        <h3 class="article-subtitle">
+            {{ . }}
+        </h3>
+        {{ end }}
+    </div>
+
+    <!--adapted from https://github.com/CaiJimmy/hugo-theme-stack/issues/880#issuecomment-2632723065 by hyhforevertop-->
+    <footer class="article-tags">
+        <div>
+            {{ partial "helper/icon" "tag" }}
+            {{ $tags := .GetTerms "tags" }}
+            {{ $count := len $tags }}
+            {{ range $index, $tag := $tags }}
+                {{ if $index }}, {{ end }}
+                <a href="{{ $tag.Page.Permalink }}">{{ $tag.LinkTitle }}</a>
+                {{ if eq $index 4 }}
+                    {{ if gt $count 5 }}... {{ end }}
+                    {{ break }}
+                {{ end }}
+            {{ end }}
+        </div>
+    </footer>
+</div>

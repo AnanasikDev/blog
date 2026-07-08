@@ -39,6 +39,9 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 @font-face {
     font-family: "NixelPixel";
     src: url("/blog/fonts/NixelPixel.woff2") format('woff2');
+
+    //font-family: "0xProto";
+    //src: url("/blog/fonts/0xProto-Regular.woff2") format('woff2');
 }
 
 
@@ -46,9 +49,12 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 *   Global font family
 */
 :root {
-    // font-family: 'Segoe UI';
     font-family: 'NixelPixel';
     --base-font-family: 'NixelPixel';
+
+    //font-family: '0xProto';
+    //--base-font-family: '0xProto';
+    //font-size: 7px;
 }
 
 /*
@@ -180,7 +186,7 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 }
 
 :root {
-    --menu-icon-separation: 40px;
+    --menu-icon-separation: 20px;
     --container-padding: 15px;
     --widget-separation: var(--section-separation);
 }

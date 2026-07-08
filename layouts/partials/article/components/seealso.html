@@ -1,30 +1,33 @@
 {{ $items := .page.Params.seealso }}
 {{ $mode := default "none" .page.Params.seealsoMode }}
 {{ $input := . }}
-{{ if $items }}
-    <div class="article-seealso-block">
-    {{ range $index, $item := $items }}
-        {{ $context := index $input "context" }}
-        {{ $parts := split $item " | " }}
-        {{ $showInList := index $parts 3 }}
-        {{ if or (eq $context "content") (eq $showInList "showInList")}}
-            {{ $class := cond (eq $context "list") "article-seealso-item-list" "article-seealso-item" }}
-            {{ if eq $mode "inline" }}
-            <span class={{$class}}>
-            {{ else }}
-            <div class={{$class}}>
+{{ $context := index $input "context" }}  
+{{ if eq $context "gallery"}}
+{{ else }}
+    {{ if $items }}
+        <div class="article-seealso-block">
+        {{ range $index, $item := $items }}
+            {{ $parts := split $item " | " }}
+            {{ $showInList := index $parts 3 }}
+            {{ if or (eq $context "content") (eq $showInList "showInList")}}
+                {{ $class := cond (eq $context "list") "article-seealso-item-list" "article-seealso-item" }}
+                {{ if eq $mode "inline" }}
+                <span class={{$class}}>
+                {{ else }}
+                <div class={{$class}}>
+                {{ end }}
+                    {{ $url := index $parts 0 }}
+                    {{ $text := index $parts 1 }}
+                    {{ $type := index $parts 2 }}
+                    {{ partial "helper/icon" $type }}
+                    <a href="{{ $url }}">{{$text}}</a>
+                {{ if eq $mode "inline" }}
+                </span>
+                {{ else }}
+                </div>
+                {{ end }}
             {{ end }}
-                {{ $url := index $parts 0 }}
-                {{ $text := index $parts 1 }}
-                {{ $type := index $parts 2 }}
-                {{ partial "helper/icon" $type }}
-                <a href="{{ $url }}">{{$text}}</a>
-            {{ if eq $mode "inline" }}
-            </span>
-            {{ else }}
-            </div>
             {{ end }}
-        {{ end }}
-        {{ end }}
-    </div>
+        </div>
+    {{ end }}
 {{ end }}

@@ -26,8 +26,28 @@
         }
         
         .article-header {
-            .article-image {
-                
+            .article-image-s1 img { height: 70px; }
+            .article-image-s2 img { height: 100px; }
+            .article-image-s3 img { height: 130px; }
+            .article-image-s4 img { height: 150px; }
+            .article-image-s5 img { height: 160px; }
+            .article-image-m1 img { height: 180px; }
+            .article-image-m2 img { height: 215px; }
+            .article-image-m3 img { height: 235px; }
+            .article-image-m4 img { height: 250px; }
+            .article-image-m5 img { height: 275px; }
+            .article-image-l1 img { height: 315px; }
+            .article-image-l2 img { height: 345px; }
+            .article-image-l3 img { height: 380px; }
+            .article-image-l4 img { height: 415px; }
+            .article-image-l5 img { height: 450px; }
+            .article-image-l6 img { height: 490px; }
+            .article-image-l7 img { height: 535px; }
+
+            // "full" shows the cover image at its natural aspect ratio instead of
+            // a fixed pixel height, so it can't be cropped, stretched or squished
+            .article-image-full img {
+                height: auto;
             }
 
             .article-details {

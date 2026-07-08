@@ -139,6 +139,7 @@
     margin: 0 calc(var(--container-padding) * -1);
 
     padding: 30px 30px;
+    overflow: hidden;
 
     @include respond(xl) {
         padding: 15px 0;
@@ -146,10 +147,10 @@
 
     &, .menu-bottom-section ol {
         flex-direction: column;
-        gap: 30px;
+        gap: 15px;
 
         @include respond(xl) {
-            gap: 25px;
+            gap: 10px;
         }
     }
 

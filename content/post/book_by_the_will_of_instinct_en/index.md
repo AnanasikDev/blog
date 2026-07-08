@@ -3,7 +3,7 @@ title: By the will of instinct
 description: A philosophical perspective on the essence of love, explored in the world of humans and furries. Teen fiction, romance, university, fantasy.
 slug: book_by_the_will_of_instinct_en
 image: cover2.jpg
-coverHeight: l7
+coverHeight: full
 date: 2025-11-15
 categories:
     - Literature

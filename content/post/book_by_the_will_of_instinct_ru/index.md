@@ -3,7 +3,7 @@ title: По воле инстинкта
 description: Филосовский взгляд на сущность любви, обыгранный в мире людей и фурри. Подростковая проза, романтика, университет, фантастика.
 slug: book_by_the_will_of_instinct_ru
 image: cover2.jpg
-coverHeight: l7
+coverHeight: full
 date: 2025-08-11
 categories:
     - Literature

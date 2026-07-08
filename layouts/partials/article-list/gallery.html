@@ -1,0 +1,9 @@
+{{ $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" }}
+<article class="paging-gallery-item">
+    {{ partial "article/components/header--gallery" . }}
+    {{ $in := dict 
+        "page" . 
+        "context" "gallery"
+    }}
+    {{partial "article/components/seealso" $in}}
+</article>
