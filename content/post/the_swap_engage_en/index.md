@@ -15,16 +15,27 @@ tags:
 seealso:
      - https://youtu.be/TTxDh-AFe1Y?si=2WTuKmUO55Slflls | Watch on Youtube (ru) | brand-youtube | showInList
      - https://ananasikdev.github.io/TheSwapEngageWeb/ | Visit website | brand-github | showInList
-draft: true
+     - https://ananasikdeveloper.itch.io/the-swap-engage | Itch.io | brand-itchdotio | showInList
 ---
 
-# The Swap: Engage
+The Swap: Engage was my first ever big project, dating from 2021-01-02 to 2022-01-23, just a bit more than a year. It was an amazing experience for me. I was documenting my progress in monthly devlog videos, created a discord community around the game, noted comments on the progress and players' thoughts, and implemented some of them for the next video. As for a 13-year-old me back then, it was insanely powerful. Of course I learned a lot of C#, math, game programming and learned basics of Unity.
 
-## Before I knew
+Here is history of the project, from beginning to the current state.
 
-### Dread Forest
+## First thoughts, Python. Dread Forest
 
-It was year 2019
+It was year 2019. I got inspired by some Minecraft RPG minigames, I thought that's my genre: long vertical progression, limited but fun exploration, dynamics, captivating graphics. This was my first time I had thought to myself that it could be ME who made a game like that. I started studying programming. I got into Scratch classes, being in middle school, that was perfect for me. Passion grew stronger, and soon enough I realized that's not enough anymore. I abandoned my flappy bird project and started learning Python. A real, powerful programming language, with functions, OOP and all the smart stuff. I was mesmerized, and with abusing internet, with some hints from my dad, I learned it to a decent level by July 2020. I was using pygame at the time, made my first graphical applications, games and simulations. My passion was burning live, I knew there is no going back. It was amazing.
+
+So, Dread Forest was born.
+
+I was first exposed to designing algorithms and 
+
+<details>
+<summary>
+Python code snippet I found
+</summary>
+
+I think it was a "game development library" I made in May-June 2020.
 
 ```python
 class Obj:  # Player/mob class
@@ -134,3 +145,52 @@ class Obj:  # Player/mob class
         else:
             self.y = y
 ```
+
+</details>
+
+
+## Unity Era. The Swap: Engage.
+
+![Character model](CharacterDemo1.png)
+
+I began working on MVP on January 2nd, 2021. By 11th, I made the first playable and showable version and published my [first YouTube video](https://youtu.be/TTxDh-AFe1Y?si=VyRXFjUwCDNPQXNq).
+
+![Earliest versions](img1.png)
+![Earliest versions](img2.png)
+
+Initially the idea was to stay close to the Dread Forest idea and make it constrained to 2D gameplay - no jumping, no hills, no vertical camera tilting.
+
+Later, after reading others' thoughts and having thought about the future of the game, I reconsidered it and made it "fully 3D". For that I spent a good amount of time working on a semi-custom first-person character controller. I think I wanted to make it third person but quickly realized I better be cutting it to first-person.
+
+![Latest versions. 3D landscape, river, blockouts. Better UI](img3.png)
+
+Credits:
+
+A lot of help came from my community. A lot of 2D sprites and 3D models were created by a couple of dedicated and passionate people - **Staby** (Stabidy), **Dion1is1sus**, **Pixel_** (*Pixel Studio*), **Blenderkon**. Music was composed by **Dominik Giesriegl** and sound design by **EF.Sound**, both exceptionally talented, skillfull, dedicated and sincere. Was a pleasure working with them.
+
+Community was organized thanks to my moderator and friend **Komb1st** (*Swift*), as well as by active member **DJL** (*DJLETOFF*).
+
+![Voxel graphics sample from an old version of the website](img5.png)
+![I bought these assets and redesigned manually (not even sure at this point if I had license to do so)](img8.png)
+![Cool landscape shot](Landscape.png)
+
+![Trees](img10.png)
+![Anti-Radiation Bomb (ARA)](ara.png)
+![Blenderkon used some ancient version of Blender to model crafting table](img11.png)
+
+---
+
+The development of the game spiked my interest in adjacent projects:
+- [Hexagon](https://github.com/AnanasikDev/Hexagon) - quality-of-life utility library for Unity C#. Started as a tiny helper, it eventually grew into a larger library, that Compile, Recycle Factory and other big projects of mine heavily rely on.
+- [Willow](https://github.com/AnanasikDev/Willow) - 3D terrain tool to place objects with highly customizable settings. Mostly used for vegetation and props. It was my first ever engine tool. Not sure if it ever made it to TSE itself though.
+- [FPS debugger](https://github.com/AnanasikDev/FrameRateDebugger) - tiny helper to fix fps to a specified value for debugging
+- [Easy Debug](https://github.com/AnanasikDev/EasyDebug) - similar fate as Hexagon. Started as a couple of functions to use unity console more easily (I, for some reason, used to fight C# syntax and try make it similar to Python). It then grew to a much more complicated debugging toolset with restrained-mode gizmos, pipe console, debug information located in the world along with objects, custom serialization.
+- Debris - almost immediately dead procedural destruction system. I was really inspired by Unreal Engine at the time, and really wanted to create a replacement for Chaos Physics. I wasn't really good at programming, math or physics at the time, so the project was quickly deemed way outside my capabilities and project scope.
+- Character Controller - a big asset I worked on for a few months, it was aimed at making a customizable and flexible 3D first-person character physically-correct movement system, with laying, crouching, walking, running, sprinting, jumping, climbing, using ziplines, swimming, taking fall damage, interacting with doors and other objects, parcour, and body animations. Pretty impressive for such an early project, but, having built on top of some existing third-party asset, I managed most of that. Because of the use of external assets though, I decided to leave it private. It made into TSE but development cut short after that since I got really tired from character programming.
+
+![Character Controller testing scene](img6.png)
+![Character Controller testing scene & FPS debugger](img7.png)
+
+---
+
+Still can't believe I did all that when was so young and inexperienced. Especially the community and leadership stuff.
