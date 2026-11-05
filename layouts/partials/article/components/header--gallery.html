@@ -1,5 +1,5 @@
 <header class="article-header">
-    {{- $image := partialCached "helper/image" (dict "Context" . "Type" "article") .RelPermalink "article" -}}
+{{- $image := partialCached "helper/image" (dict "Context" . "Type" "article") .RelPermalink "article" -}}\
     {{ if $image.exists }}
         {{ $height := default "" .Params.coverHeight}}
         <div class="article-image-{{$height}}">

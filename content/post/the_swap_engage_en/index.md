@@ -8,6 +8,7 @@ coverHeight: l1
 categories:
     - Programming
     - Russian
+    - Portfolio
 tags:
     - Programming
     - Unity

@@ -94,3 +94,10 @@ This is a quick start template for [Hugo theme Stack](https://github.com/CaiJimm
 
 It comes with a basic theme structure and configuration. GitHub action has been set up to deploy the theme to a public GitHub page automatically. Also, there's a cron job to update the theme automatically everyday.
 
+## Shortcuts
+
+### Center image
+{{< img src="pentafox.svg" alt="Pentafox logo" width="200" class="img-center" >}}
+
+### Side image with flowing text
+{{< img src="pentafox.svg" alt="Pentafox logo" width="300" class="img-right" >}}

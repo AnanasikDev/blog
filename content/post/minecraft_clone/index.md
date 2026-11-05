@@ -1,6 +1,6 @@
 ---
 title: Minecraft in C++
-description: Minecraft-like game I made in C++ and OpenGL in 8 weeks at Breda University of Applied Sciences
+description: Y1B Minecraft-like game I made in C++ and OpenGL in 8 weeks at Breda University of Applied Sciences
 slug: minecraft_clone
 date: 2026-01-16
 image: cover.jpg
@@ -9,6 +9,7 @@ categories:
     - Programming
     - English
     - Games
+    - Portfolio
 tags:
     - Programming
     - English
@@ -21,7 +22,6 @@ seealso:
 ---
 
 In Breda University of Applied Sciences (BUas) in Block B I had a solo 8-week-long project of creating a Minecraft-like game with custom C++ engine using OpenGL. Main technical focus of the block was to work with graphics, cross-platform development (main platform was Linux-based Raspberry PI), procedural generation etc. This was my first experience with most of that and I am very happy with my growth and the result. I got 94/100 points for the project.
-
 
 ![Project Manhattan](img6.png)
 ![Tons of lights](img2.png)

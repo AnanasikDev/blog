@@ -2,3 +2,51 @@
 
 // --- Custom Article Card Image Height ---
 @import "partials/tilegallery.scss";
+
+figure.img-center {
+  margin: 1.5rem 0;
+}
+
+figure.img-center img {
+  display: block;
+  margin-inline: auto;
+}
+
+figure.img-left,
+figure.img-right {
+  max-width: 50%;
+  margin-block: 0.25rem 1rem;
+}
+
+figure.img-left {
+  float: left;
+  margin-inline: 0 1.5rem;
+}
+
+figure.img-right {
+  float: right;
+  margin-inline: 1.5rem 0;
+}
+
+/* Keep images inside the page and preserve their proportions */
+figure.img-center img,
+figure.img-left img,
+figure.img-right img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Stop new sections wrapping around an earlier image */
+h2, h3 {
+  clear: both;
+}
+
+/* Stack side images on phones */
+@media (max-width: 600px) {
+  figure.img-left,
+  figure.img-right {
+    float: none;
+    max-width: 100%;
+    margin-inline: 0;
+  }
+}

@@ -1,9 +1,9 @@
 {{ define "main" }}
     {{ $pages := where .Site.RegularPages "Type" "in" .Site.Params.mainSections }}
-    {{ $notHidden := where .Site.RegularPages "Params.hidden" "!=" true }}
-    {{ $filtered := ($pages | intersect $notHidden) }}
+    {{ $notHidden := where $pages "Params.hidden" "!=" true }}
+    {{ $portfolio := where $notHidden "Params.Categories" "intersect" (slice "Portfolio") }}
+    {{ $filtered := $portfolio }}
     {{ $pag := .Paginate ($filtered) }}
-
     <section class="article-gallery">
         {{ range $index, $element := $pag.Pages }}
             {{ partial "article-list/gallery" . }}

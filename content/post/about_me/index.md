@@ -56,7 +56,7 @@ I am **Ananaseek** or **AnanseekJam** - a young enthusiast with passion for game
 11. <a href="https://github.com/AnanasikDev/UniverseJam">Inevitable (UniverseJam #1)🔥🔒</a><br/>
 12. <a href="https://github.com/AnanasikDev/bomberman">Bomberman NES Replica🔒</a><br/>
 13. <a href="https://github.com/AnanasikDev/Minecraft">Minecraft Replica🔥🔒</a><br/>
-
+14. <a href="https://ananasikdeveloper.itch.io/catdemurse">Cat De Murse (Furry Game Jam #2)🔒</a><br/>
  
 ## Libraries & Assets
 
@@ -76,8 +76,8 @@ I am **Ananaseek** or **AnanseekJam** - a young enthusiast with passion for game
 7. <a href="https://github.com/AnanasikDev/Autoclicker"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" class="iconimg-char" alt="Java" width="16" height="16"/> Anti-anti-autoclicker🔒</a><br/>
 8. <a href="https://github.com/AnanasikDev/BrainfuckInterpreter"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" class="iconimg-char" alt="C" width="16" height="16"/> Brainfuck interpreter🔥🔒</a><br/>
 9. <a href="https://github.com/AnanasikDev/3D-Model-disk-slicer"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" class="iconimg-char" alt="Python" width="16" height="16"/> Blender 3D model slicer🔒</a><br/>
-10. <a href="https://github.com/AnanasikDev/MarineEvolution"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" class="iconimg-char" alt="C++" width="16" height="16"/> Genetic brain evolution simulation🔒</a><br/> 
-
+10. <a href="https://github.com/AnanasikDev/MarineEvolution"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" class="iconimg-char" alt="C++" width="16" height="16"/> Genetic brain evolution simulation🔒</a><br/>
+11. <a href="https://github.com/AnanasikDev/Raytracer"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" class="iconimg-char" alt="C++" width="16" height="16"/> CPU Ray Tracer + Planet Editor🔒</a><br/>
 
 I have also been contributing as a translator to other projects such as <a href="https://www.hedycode.com/">Hedy</a> and <a href="https://store.steampowered.com/app/2827230/Wild_Assault/">Wild Assault</a>. More about it at <a href="https://hosted.weblate.org/user/Ananaseek/">Weblate</a><br>
 
@@ -87,6 +87,7 @@ I have also been contributing as a translator to other projects such as <a href=
 2. <a href="https://medium.com/@furryananasik/software-driven-devices-essay-2f32cc913ea2">Software-Driven Devices: essay</a> (2024-11)<br/>
 3. <a href="https://gist.github.com/AnanasikDev/9e936cda383ba824bfe58263cae9e07a">How to create a Minecraft server without hustle</a> (2024-11)<br/>
 4. <a href="https://medium.com/@furryananasik/3d-models-to-real-life-figures-bc7ba4def5f3">3D models to real life figures</a> (2025-08)<br/>
+5. <a href="https://ananasikdev.github.io/blog/p/simd_1_en/">SIMD part 1</a> (2026-03-28)<br/>
 
 <hr>
 

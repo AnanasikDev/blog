@@ -1,0 +1,5 @@
+{{- $src := .Get "src" -}}
+{{- with .Page.Resources.Get $src }}{{ $src = .RelPermalink }}{{ end -}}
+<figure class="{{ .Get "class" }}">
+  <img src="{{ $src }}" alt="{{ .Get "alt" }}"{{ with .Get "width" }} style="width: {{ . }}px"{{ end }}>
+</figure>
