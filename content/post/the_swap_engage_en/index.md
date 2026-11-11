@@ -4,7 +4,7 @@ description: The story of development of my earliest large project
 slug: the_swap_engage_story_en
 date: 2025-10-17
 image: posts/the_swap_engage/cover.jpg
-coverHeight: l1
+coverHeight: full
 categories:
     - Programming
     - Russian

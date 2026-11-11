@@ -35,3 +35,17 @@ In Breda University of Applied Sciences (BUas) in Block B I had a solo 8-week-lo
 
 ![Bind your VAOs, kids!](img8.png)
 ![Runs on Raspberry PI](img9.png)
+
+![Bugs in generation](img10.png)
+![](img11.png)
+![Caves](img12.png)
+
+![Lights](img13.png)
+![Flood before I fixed tree gen](img14.png)
+![](img15.png)
+
+![](img16.png)
+![](img17.png)
+
+![Big cave](img18.png)
+![Hut](img19.png)

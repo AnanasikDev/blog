@@ -45,3 +45,4 @@ icon = "brand-itchdotio"
     weight = 30
     [main.params]
         icon = "portfolio"
+        

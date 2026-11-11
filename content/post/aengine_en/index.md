@@ -1,10 +1,10 @@
 ---
 title: AEngine & Strike
-description: My first game engine made for Saxion University, plus a little game
+description: My first game engine made as an intake project for Breda University, plus a little game
 slug: aengine
-date: 2026-11-05
+date: 2025-01-09
 image: img1.png
-coverHeight: l5
+coverHeight: l1
 categories:
     - English
     - Programming
