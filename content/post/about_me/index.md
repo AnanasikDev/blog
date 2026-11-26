@@ -23,7 +23,7 @@ seealso:
      - https://www.wattpad.com/user/AnanaSeek4Jam | Wattpad | brand-wattpad | showInList
 ---
 
-I am **Ananaseek** or **AnanseekJam** - a young enthusiast with passion for game development, programming and art. Having embarked on my journey in **2020 Jan**, I learned **Python**, **C#** + **Unity**, some **C++**, **C** and **Java**. I also led 2 teams on gamejams (Mini Jam <a href="https://itch.io/jam/mini-jam-162-heat">#162</a> and <a href="https://itch.io/jam/mini-jam-163-dessert">#163</a>).
+I am **Ananaseek** or **AnanseekJam** - a young enthusiast with passion for game development, programming and art. Having embarked on my journey in **2020 Jan**, I learned **Python**, **C#** + **Unity**, **C++**, some **C** and **Java**. I also led 2 teams on gamejams (Mini Jam <a href="https://itch.io/jam/mini-jam-162-heat">#162</a> and <a href="https://itch.io/jam/mini-jam-163-dessert">#163</a>).
 
 <a href="https://unity.com/"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/unity/unity-original.svg" class="iconimg" alt="Unity" width="28" height="28"/></a><a href="https://dotnet.microsoft.com/en-us/languages/csharp"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/csharp/csharp-original.svg" class="iconimg" alt="C#" width="28" height="28"/></a>
 <a href="https://cplusplus.com/"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" class="iconimg" alt="C++" width="28" height="28"/></a>
@@ -78,6 +78,7 @@ I am **Ananaseek** or **AnanseekJam** - a young enthusiast with passion for game
 9. <a href="https://github.com/AnanasikDev/3D-Model-disk-slicer"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" class="iconimg-char" alt="Python" width="16" height="16"/> Blender 3D model slicer🔒</a><br/>
 10. <a href="https://github.com/AnanasikDev/MarineEvolution"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" class="iconimg-char" alt="C++" width="16" height="16"/> Genetic brain evolution simulation🔒</a><br/>
 11. <a href="https://github.com/AnanasikDev/Raytracer"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" class="iconimg-char" alt="C++" width="16" height="16"/> CPU Ray Tracer + Planet Editor🔒</a><br/>
+12. <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" class="iconimg-char" alt="C++" width="16" height="16"/> Pentafox Game Engine for Windows and PS5 (under NDA)🔒
 
 I have also been contributing as a translator to other projects such as <a href="https://www.hedycode.com/">Hedy</a> and <a href="https://store.steampowered.com/app/2827230/Wild_Assault/">Wild Assault</a>. More about it at <a href="https://hosted.weblate.org/user/Ananaseek/">Weblate</a><br>
 
