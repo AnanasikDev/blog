@@ -3,7 +3,6 @@ title: WebApp Advanced stopwatch
 slug: app_stopwatch
 date: 2026-11-26
 readTime: false
-draft: true
 layout: app
 categories:
     - English
