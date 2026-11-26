@@ -1,5 +1,5 @@
 {{- /*
-  Shared palette for the vector labs (BasisLab, VectorLab, NormalLab).
+  Shared palette for the embedded labs (BasisLab, VectorLab, NormalLab, password calculator).
   Include once per page from a shortcode:
     {{ if not (.Page.Store.Get "vl-theme") }}{{ .Page.Store.Set "vl-theme" true }}{{ partial "vectorlab-theme.html" . }}{{ end }}
   Everything inside .vl-root uses var(--vl-*); canvases read the same values via VLTheme.read().
@@ -22,6 +22,7 @@
     --vl-blue: #2563eb;
     --vl-red: #dc2626;
     --vl-green: #059669;
+    --vl-orange: #ea580c;
     --vl-blue-2: #60a5fa;
     --vl-red-2: #f87171;
     --vl-shadow: 0 20px 45px -18px rgba(15, 23, 42, 0.28);
@@ -54,6 +55,7 @@ html[data-scheme="dark"] .vl-root {
     --vl-blue: #60a5fa;
     --vl-red: #f87171;
     --vl-green: #34d399;
+    --vl-orange: #fb923c;
     --vl-blue-2: #93c5fd;
     --vl-red-2: #fca5a5;
     --vl-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
@@ -71,7 +73,7 @@ html[data-scheme="dark"] .vl-root {
         color-scheme: dark;
         --vl-bg: #0f172a; --vl-panel: #1e293b; --vl-deep: #020617; --vl-border: #334155; --vl-border-strong: #475569;
         --vl-fg: #f8fafc; --vl-fg-2: #cbd5e1; --vl-strong: #ffffff; --vl-muted: #94a3b8; --vl-faint: #64748b; --vl-on-accent: #0f172a;
-        --vl-yellow: #fbbf24; --vl-blue: #60a5fa; --vl-red: #f87171; --vl-green: #34d399; --vl-blue-2: #93c5fd; --vl-red-2: #fca5a5;
+        --vl-yellow: #fbbf24; --vl-blue: #60a5fa; --vl-red: #f87171; --vl-green: #34d399; --vl-orange: #fb923c; --vl-blue-2: #93c5fd; --vl-red-2: #fca5a5;
         --vl-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         --vl-canvas: #020617; --vl-grid: #1e293b; --vl-grid-strong: #475569; --vl-grid-basis: #334155; --vl-label: #64748b;
         --vl-x: #fb7185; --vl-y: #4ade80; --vl-z: #60a5fa;
