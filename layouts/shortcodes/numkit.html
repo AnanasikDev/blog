@@ -1,0 +1,26 @@
+{{- /*
+  NumKit embed.
+    {{< numkit >}}                              all four sub-apps
+    {{< numkit apps="calc" >}}                  just the calculator
+    {{< numkit apps="layout,bits" theme="dark" >}}
+  Params: apps (calc,data,layout,bits), theme (auto|light|dark), storage (localStorage namespace), id, nav (true|false)
+  The JS/CSS are built from assets/ with Hugo Pipes and included once per page.
+*/ -}}
+{{- $apps := .Get "apps" | default "calc,data,layout,bits" -}}
+{{- $theme := .Get "theme" | default "auto" -}}
+{{- if not (.Page.Store.Get "numkit-included") -}}
+  {{- .Page.Store.Set "numkit-included" true -}}
+  {{- $opts := dict "targetPath" "js/numkit.js" "format" "iife" "target" "es2020" "minify" hugo.IsProduction -}}
+  {{- $js := resources.Get "js/numkit/index.js" | js.Build $opts -}}
+  {{- $css := resources.Get "css/numkit.css" -}}
+  {{- if hugo.IsProduction -}}
+    {{- $js = $js | fingerprint -}}
+    {{- $css = $css | minify | fingerprint -}}
+  {{- end }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}"{{ end }}>
+<script defer src="{{ $js.RelPermalink }}"{{ with $js.Data.Integrity }} integrity="{{ . }}"{{ end }}></script>
+{{- end }}
+<div class="numkit-embed" data-numkit data-apps="{{ $apps }}" data-theme="{{ $theme }}"
+  {{- with .Get "id" }} id="{{ . }}"{{ end }}
+  {{- with .Get "storage" }} data-storage="{{ . }}"{{ end }}
+  {{- with .Get "nav" }} data-nav="{{ . }}"{{ end }}></div>
