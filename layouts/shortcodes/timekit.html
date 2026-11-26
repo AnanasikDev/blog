@@ -1,0 +1,25 @@
+{{- /*
+  TimeKit embed: current time + stopwatch with speed control and timed events.
+    {{< timekit >}}                          clock and stopwatch
+    {{< timekit apps="stopwatch" >}}         just the stopwatch
+  Params: apps (clock,stopwatch), theme (auto|light|dark), storage (localStorage namespace), id, bar (true|false: Focus / Full screen buttons)
+  The JS/CSS are built from assets/ with Hugo Pipes and included once per page.
+*/ -}}
+{{- $apps := .Get "apps" | default "clock,stopwatch" -}}
+{{- $theme := .Get "theme" | default "auto" -}}
+{{- if not (.Page.Store.Get "timekit-included") -}}
+  {{- .Page.Store.Set "timekit-included" true -}}
+  {{- $opts := dict "targetPath" "js/timekit.js" "format" "iife" "target" "es2020" "minify" hugo.IsProduction -}}
+  {{- $js := resources.Get "js/timekit/index.js" | js.Build $opts -}}
+  {{- $css := resources.Get "scss/apps/timekit.scss" | toCSS (dict "targetPath" "css/timekit.css") -}}
+  {{- if hugo.IsProduction -}}
+    {{- $js = $js | fingerprint -}}
+    {{- $css = $css | minify | fingerprint -}}
+  {{- end }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}"{{ end }}>
+<script defer src="{{ $js.RelPermalink }}"{{ with $js.Data.Integrity }} integrity="{{ . }}"{{ end }}></script>
+{{- end }}
+<div class="timekit-embed" data-timekit data-apps="{{ $apps }}" data-theme="{{ $theme }}"
+  {{- with .Get "id" }} id="{{ . }}"{{ end }}
+  {{- with .Get "storage" }} data-storage="{{ . }}"{{ end }}
+  {{- with .Get "bar" }} data-bar="{{ . }}"{{ end }}></div>
