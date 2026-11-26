@@ -8,19 +8,30 @@ html {
 }
 
 body {
-    --body-pattern: url("/blog/images/pattern2.png");
+    // Optional image under the stars, e.g. url("/blog/images/pattern2.png")
+    --body-pattern: none;
 
-    // Pattern scroll speed relative to the page:
+    // Star field: two tiles (generated SVGs, white dots) for a sense of depth
+    --body-stars-far: url("/blog/images/stars-far.svg");
+    --body-stars-near: url("/blog/images/stars-near.svg");
+
+    // How the stars combine with what's below. "difference" turns the white
+    // stars into dark dots on a light background; dark mode uses "normal".
+    --body-stars-blend: difference;
+
+    // Scroll speed relative to the page:
     //   0 = stays still, 0.5 = half speed, 1 = moves with the page,
     //   >1 = faster than the page, negative = moves the opposite way
     --body-pattern-speed: 0.25;
+    --body-stars-far-speed: 0.1;
+    --body-stars-near-speed: 0.3;
 
     --body-gradient-start: #f7f7fb;
     --body-gradient-mid: #eef0f6;
     --body-gradient-end: #f3eef4;
 
     // How strongly the gradient covers the pattern: 0% = invisible, 100% = fully opaque
-    --body-gradient-strength: 60%;
+    --body-gradient-strength: 0%;
 
     // How the gradient combines with the pattern underneath:
     //   normal                     plain overlay (just covers it)
@@ -31,12 +42,53 @@ body {
     --body-gradient-blend: normal;
 
     [data-scheme="dark"] & {
-        --body-gradient-start: #7d93413b;
-        --body-gradient-mid: #303030;
-        --body-gradient-end: #c76b2451;
+        --body-gradient-start: #0000003b;
+        --body-gradient-mid: #000000;
+        --body-gradient-end: #000000;
+        --body-stars-blend: normal;
     }
 
-    background-color: var(--body-background);
+    // Light mode: its own sunrise background (everything above is the dark look).
+    // Faint stars stay in the cooler sky at the top; the sky fades them out lower down.
+    [data-scheme="light"] & {
+        --sunrise-sky: #d8e0f5;        // top of the sky, where the stars show
+        --sunrise-violet: #e4ddf6;
+        --sunrise-rose: #fce6eb;
+        --sunrise-peach: #fddfc6;
+        --sunrise-gold: #ffe4a6;       // horizon
+        --sunrise-sun: #fff6dc;
+
+        background-color: var(--sunrise-sky);
+        background-image:
+            // sun glow, rising from below the bottom edge
+            radial-gradient(
+                ellipse 70% 50% at 50% 110%,
+                var(--sunrise-sun) 0%,
+                color-mix(in srgb, var(--sunrise-peach) 60%, transparent) 40%,
+                transparent 75%
+            ),
+            // sky: clear at the top so the stars show, fully opaque from the middle down
+            linear-gradient(
+                180deg,
+                transparent 0%,
+                color-mix(in srgb, var(--sunrise-violet) 70%, transparent) 25%,
+                var(--sunrise-rose) 50%,
+                var(--sunrise-peach) 75%,
+                var(--sunrise-gold) 100%
+            ),
+            var(--body-stars-near),
+            var(--body-stars-far);
+        background-repeat: no-repeat, no-repeat, repeat, repeat;
+        background-attachment: fixed, fixed, fixed, fixed;
+        background-position:
+            0 0,
+            0 0,
+            0 calc(var(--scroll-y, 0) * var(--body-stars-near-speed) * -1px),
+            0 calc(var(--scroll-y, 0) * var(--body-stars-far-speed) * -1px);
+        background-blend-mode: normal;
+    }
+
+    background-color: #222227;
     background-image:
         linear-gradient(
             160deg,
@@ -44,12 +96,22 @@ body {
             color-mix(in srgb, var(--body-gradient-mid) var(--body-gradient-strength), transparent) 50%,
             color-mix(in srgb, var(--body-gradient-end) var(--body-gradient-strength), transparent) 100%
         ),
+        var(--body-stars-near),
+        var(--body-stars-far),
         var(--body-pattern);
-    background-repeat: no-repeat, repeat;
-    background-attachment: fixed, fixed;
+    background-repeat: no-repeat, repeat, repeat, repeat;
+    background-attachment: fixed, fixed, fixed, fixed;
     // Parallax: --scroll-y is set by layouts/partials/footer/custom.html
-    background-position: 0 0, 0 calc(var(--scroll-y, 0) * var(--body-pattern-speed) * -1px);
-    background-blend-mode: var(--body-gradient-blend), normal;
+    background-position:
+        0 0,
+        0 calc(var(--scroll-y, 0) * var(--body-stars-near-speed) * -1px),
+        0 calc(var(--scroll-y, 0) * var(--body-stars-far-speed) * -1px),
+        0 calc(var(--scroll-y, 0) * var(--body-pattern-speed) * -1px);
+    background-blend-mode:
+        var(--body-gradient-blend),
+        var(--body-stars-blend),
+        var(--body-stars-blend),
+        normal;
     min-height: 100vh;
 
     margin: 0;
