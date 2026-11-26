@@ -35,7 +35,10 @@
   text-align: left;
 }
 
-.nk[data-theme="dark"] {
+/* "auto" follows the site's own toggle when it sets data-scheme on <html> (Hugo Stack does),
+   and falls back to the OS preference below when the site sets nothing. */
+.nk[data-theme="dark"],
+html[data-scheme="dark"] .nk[data-theme="auto"] {
   --nk-bg: #16181c;
   --nk-surface: #1e2126;
   --nk-fg: #e5e7eb;
@@ -60,7 +63,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .nk[data-theme="auto"] {
+  html:not([data-scheme]) .nk[data-theme="auto"] {
     --nk-bg: #16181c;
     --nk-surface: #1e2126;
     --nk-fg: #e5e7eb;

@@ -1,6 +1,6 @@
 ---
 title: Advanced number system calculator
-slug: _test_
+slug: numkit
 date: 2026-11-15
 image: img1.png
 coverHeight: l1
@@ -15,3 +15,5 @@ tags:
 ---
 
 {{< numkit >}}
+
+*the app was written by Claude*
