@@ -8,7 +8,50 @@ html {
 }
 
 body {
-    background: var(--body-background);
+    --body-pattern: url("/blog/images/pattern2.png");
+
+    // Pattern scroll speed relative to the page:
+    //   0 = stays still, 0.5 = half speed, 1 = moves with the page,
+    //   >1 = faster than the page, negative = moves the opposite way
+    --body-pattern-speed: 0.25;
+
+    --body-gradient-start: #f7f7fb;
+    --body-gradient-mid: #eef0f6;
+    --body-gradient-end: #f3eef4;
+
+    // How strongly the gradient covers the pattern: 0% = invisible, 100% = fully opaque
+    --body-gradient-strength: 60%;
+
+    // How the gradient combines with the pattern underneath:
+    //   normal                     plain overlay (just covers it)
+    //   overlay / soft-light       contrast boost
+    //   screen / multiply          lighten / darken
+    //   hue / color / saturation   hue shift / tint
+    //   luminosity                 light shift that keeps the pattern's colours
+    --body-gradient-blend: normal;
+
+    [data-scheme="dark"] & {
+        --body-gradient-start: #7d93413b;
+        --body-gradient-mid: #303030;
+        --body-gradient-end: #c76b2451;
+    }
+
+    background-color: var(--body-background);
+    background-image:
+        linear-gradient(
+            160deg,
+            color-mix(in srgb, var(--body-gradient-start) var(--body-gradient-strength), transparent) 0%,
+            color-mix(in srgb, var(--body-gradient-mid) var(--body-gradient-strength), transparent) 50%,
+            color-mix(in srgb, var(--body-gradient-end) var(--body-gradient-strength), transparent) 100%
+        ),
+        var(--body-pattern);
+    background-repeat: no-repeat, repeat;
+    background-attachment: fixed, fixed;
+    // Parallax: --scroll-y is set by layouts/partials/footer/custom.html
+    background-position: 0 0, 0 calc(var(--scroll-y, 0) * var(--body-pattern-speed) * -1px);
+    background-blend-mode: var(--body-gradient-blend), normal;
+    min-height: 100vh;
+
     margin: 0;
     font-family: var(--base-font-family);
     font-size: 1.6rem;

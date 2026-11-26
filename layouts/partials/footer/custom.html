@@ -1,0 +1,24 @@
+<script>
+    // Background parallax: exposes the scroll offset as --scroll-y on <body>,
+    // which base.scss multiplies by --body-pattern-speed.
+    (function () {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        var body = document.body;
+        var ticking = false;
+
+        function update() {
+            body.style.setProperty("--scroll-y", window.scrollY);
+            ticking = false;
+        }
+
+        window.addEventListener("scroll", function () {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(update);
+            }
+        }, { passive: true });
+
+        update();
+    })();
+</script>
