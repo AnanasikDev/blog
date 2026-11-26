@@ -8,7 +8,17 @@
     }
 
     .main-article {
-        background: var(--card-background);
+        // Frosted glass over the site background. Tune with:
+        //   --article-glass-opacity  how solid the card is (100% = opaque, as before)
+        //   --article-glass-blur     how much of the background shows through sharply (0 = plain see-through)
+        --article-glass-opacity: 50%;
+        --article-glass-blur: 9px;
+
+        background: var(--card-background); // fallback for browsers without color-mix
+        background: color-mix(in srgb, var(--card-background) var(--article-glass-opacity), transparent);
+        -webkit-backdrop-filter: blur(var(--article-glass-blur)) saturate(140%);
+        backdrop-filter: blur(var(--article-glass-blur)) saturate(140%);
+        border: 1px solid color-mix(in srgb, var(--card-background) 60%, transparent);
         border-radius: var(--card-border-radius);
         box-shadow: var(--shadow-l1);
         overflow: hidden;
