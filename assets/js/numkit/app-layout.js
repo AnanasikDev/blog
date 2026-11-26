@@ -284,7 +284,7 @@ export function mountLayout(body, ctx) {
       ? h('td', null, h('span', { class: 'nk-led-arr' }, '[', numInp('count'), ']'))
       : h('td', null, numInp('width'));
     return h('tr', { class: ['nk-led-r', it.kind === 'array' && 'nk-led-arrrow', !it.used && 'nk-led-unused'] },
-      h('td', { style: { paddingLeft: `${0.4 + depth * 1.4}rem` } }, depth ? h('span', { class: 'nk-led-tree' }, '└ ') : null, nameInp),
+      h('td', { style: { paddingLeft: `calc(${0.4 + depth * 1.4} * var(--nk-rem))` } }, depth ? h('span', { class: 'nk-led-tree' }, '└ ') : null, nameInp),
       sizeCell, h('td', null, modeSel, ' ', offInp), h('td', { class: 'nk-c' }, usedChk), computed, actions);
   }
 
@@ -370,10 +370,10 @@ export function mountLayout(body, ctx) {
       for (const p of l.placed) {
         const abs = base + p.off;
         if (p.it.kind === 'field') {
-          rows.push(h('tr', { class: !p.it.used ? 'nk-dim' : '' }, h('td', { style: { paddingLeft: `${0.4 + depth}rem` } }, prefix + p.it.name),
+          rows.push(h('tr', { class: !p.it.used ? 'nk-dim' : '' }, h('td', { style: { paddingLeft: `calc(${0.4 + depth} * var(--nk-rem))` } }, prefix + p.it.name),
             h('td', null, fmtOff(abs)), h('td', null, String(p.size)), h('td', null, String(abs + p.size)), h('td', null, p.it.used ? 'used' : 'unused')));
         } else {
-          rows.push(h('tr', { class: 'nk-led-arrrow' }, h('td', { style: { paddingLeft: `${0.4 + depth}rem` } }, `${prefix}${p.it.name}[${p.it.count}]`),
+          rows.push(h('tr', { class: 'nk-led-arrrow' }, h('td', { style: { paddingLeft: `calc(${0.4 + depth} * var(--nk-rem))` } }, `${prefix}${p.it.name}[${p.it.count}]`),
             h('td', null, fmtOff(abs)), h('td', null, `${p.size} (${p.it.count} × ${p.elem.size})`), h('td', null, String(abs + p.size)), h('td', null, p.it.used ? 'array' : 'unused array')));
           walk(p.elem, abs, `${prefix}${p.it.name}[0].`, depth + 1);
         }

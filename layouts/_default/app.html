@@ -1,0 +1,24 @@
+{{- /*
+  Standalone app page: the site background and left sidebar, then the page content
+  with no article card, title, tags, related posts, comments or footer.
+
+  Use it from any page's front matter:
+      layout: app
+      appFontSize: 18px     # optional, overrides --app-font-size for this page
+      appZoom: 1.1          # optional, scales apps whose sizes are fixed in px
+      appWidth: full        # optional, use the whole width next to the sidebar
+
+  The same shortcode still works embedded in a normal post; only this page changes.
+*/ -}}
+
+{{ define "body-class" }}app-page{{ end }}
+
+{{ define "main" }}
+    {{- $style := slice -}}
+    {{- with .Params.appFontSize }}{{ $style = $style | append (printf "--app-font-size: %v" .) }}{{ end -}}
+    {{- with .Params.appZoom }}{{ $style = $style | append (printf "--app-zoom: %v" .) }}{{ end }}
+    <div class="app-container{{ if eq .Params.appWidth `full` }} app-container--full{{ end }}"
+        {{- with $style }} style="{{ delimit . `; ` | safeCSS }}"{{ end }}>
+        {{ .Content }}
+    </div>
+{{ end }}

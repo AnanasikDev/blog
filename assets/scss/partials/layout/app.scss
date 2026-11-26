@@ -1,0 +1,27 @@
+// Standalone app pages (layouts/_default/app.html, `layout: app` in front matter).
+// The page content sits straight on the site background, with its own text size.
+
+.app-page {
+    // Text size for apps. Apps that size their text from it (NumKit does, via
+    // --nk-rem) scale cleanly; other apps at least inherit it as their base size.
+    --app-font-size: 18px;
+
+    // Extra scaling for apps whose sizes are fixed in px and ignore the font size.
+    --app-zoom: 1;
+
+    .app-container {
+        font-size: var(--app-font-size);
+        line-height: 1.5;
+        color: var(--card-text-color-main);
+        zoom: var(--app-zoom);
+
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+        padding-bottom: var(--section-separation);
+
+        &--full {
+            max-width: none;
+        }
+    }
+}

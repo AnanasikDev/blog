@@ -88,6 +88,10 @@ draft: false
 *Controls how to display Table Of Contents (toc) on the page. Default is adapt.*\
 toc: always/never/**adapt**\
 
+### layout
+*allows to set page layout to app to change style*
+layout: app
+
 # Hugo Theme Stack Starter Template
 
 This is a quick start template for [Hugo theme Stack](https://github.com/CaiJimmy/hugo-theme-stack). It uses [Hugo modules](https://gohugo.io/hugo-modules/) feature to load the theme.
