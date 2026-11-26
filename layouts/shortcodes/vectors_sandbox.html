@@ -1,9 +1,10 @@
-<div style="background: #0f172a; color: #f8fafc; padding: 25px; border-radius: 20px; max-width: 1050px; font-family: system-ui, sans-serif; box-shadow: 0 25px 50px rgba(0,0,0,0.5); margin: 20px auto; border: 1px solid #1e293b; user-select: none;">
+{{ if not (.Page.Store.Get "vl-theme") }}{{ .Page.Store.Set "vl-theme" true }}{{ partial "vectorlab-theme.html" . }}{{ end }}
+<div id="vs_container" class="vl-root" style="background: var(--vl-bg); color: var(--vl-fg); padding: 25px; border-radius: 20px; max-width: 1050px; font-family: system-ui, sans-serif; box-shadow: var(--vl-shadow); margin: 20px auto; border: 1px solid var(--vl-panel); user-select: none;">
     
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #1e293b; padding-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid var(--vl-panel); padding-bottom: 20px;">
         <div style="display: flex; align-items: center; gap: 20px;">
-            <h2 style="margin: 0; color: #34d399; font-size: 2rem; letter-spacing: -1.5px;">&lt;VectorLab /&gt;</h2>
-            <button onclick="resetAll()" style="background: #1e293b; color: #f87171; border: 1px solid #f8717144; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">RESET ALL</button>
+            <h2 style="margin: 0; color: var(--vl-green); font-size: 2rem; letter-spacing: -1.5px;">&lt;VectorLab /&gt;</h2>
+            <button onclick="resetAll()" style="background: var(--vl-panel); color: var(--vl-red); border: 1px solid color-mix(in srgb, var(--vl-red) 27%, transparent); padding: 6px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem;">RESET ALL</button>
         </div>
         <div style="display: flex; gap: 12px; align-items: center; font-size: 0.9rem;">
             <div class="dropdown-group">
@@ -38,22 +39,22 @@
 
     <div style="display: flex; gap: 30px; flex-wrap: wrap;">
         <div style="flex: 1; min-width: 450px; display: flex; flex-direction: column; align-items: center;">
-            <canvas id="vectorCanvas" width="500" height="500" style="background: #020617; border-radius: 12px; border: 1px solid #334155; width: 100%; height: auto; touch-action: none; cursor: crosshair;"></canvas>
-            <div id="originCoords" style="margin-top: 15px; font-family: monospace; color: #f8fafc; font-size: 1.2rem; background: #1e293b; padding: 10px 22px; border-radius: 8px; border: 1px solid #334155; display: flex; gap: 30px;">
+            <canvas id="vectorCanvas" width="500" height="500" style="background: var(--vl-deep); border-radius: 12px; border: 1px solid var(--vl-border); width: 100%; height: auto; touch-action: none; cursor: crosshair;"></canvas>
+            <div id="originCoords" style="margin-top: 15px; font-family: monospace; color: var(--vl-fg); font-size: 1.2rem; background: var(--vl-panel); padding: 10px 22px; border-radius: 8px; border: 1px solid var(--vl-border); display: flex; gap: 30px;">
                 <span>Pos: (0.00, 0.00)</span>
-                <span style="color: #34d399;">Dist: 0.00</span>
+                <span style="color: var(--vl-green);">Dist: 0.00</span>
             </div>
         </div>
 
         <div style="width: 420px; display: flex; flex-direction: column; gap: 15px;">
-            <div style="display: flex; gap: 10px; background: #020617; padding: 18px 40px 18px 8px; border-radius: 12px; border: 1px solid #1e293b; border-left: 5px solid #60a5fa;">
+            <div style="display: flex; gap: 10px; background: var(--vl-deep); padding: 18px 40px 18px 8px; border-radius: 12px; border: 1px solid var(--vl-panel); border-left: 5px solid var(--vl-blue);">
                 <div class="rot-container" onmouseenter="hoverRot=0;render()" onmouseleave="hoverRot=null;render()">
                     <div class="rot-scale"><span>359°</span><span>0°</span></div>
                     <input type="range" class="rot-slider" id="rotSlider0" min="0" max="359" step="1" oninput="rotateVec(0, this.value)">
                 </div>
                 <div style="flex: 1;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <span style="color: #60a5fa; font-weight: bold; font-size: 1.2rem;">Vector A</span>
+                        <span style="color: var(--vl-blue); font-weight: bold; font-size: 1.2rem;">Vector A</span>
                         <div style="display: flex; gap: 12px;">
                             <div class="stepper-wrap"><span>X:</span><div class="stepper"><button onclick="step(0,'x',-1)">-</button><input type="text" id="ax_in" oninput="validateInput(0,'x',this)"><button onclick="step(0,'x',1)">+</button></div></div>
                             <div class="stepper-wrap"><span>Y:</span><div class="stepper"><button onclick="step(0,'y',-1)">-</button><input type="text" id="ay_in" oninput="validateInput(0,'y',this)"><button onclick="step(0,'y',1)">+</button></div></div>
@@ -61,7 +62,7 @@
                     </div>
                     <div style="display: flex; align-items: center; gap: 12px; margin: 15px 0;">
                         <input type="range" class="vec-slider" id="slider0" min="0" max="5" step="0.01" oninput="updateLen(0, this.value)" style="flex: 1; margin: 0;">
-                        <div class="stepper-wrap"><span>L:</span><div class="stepper" style="border-color: #475569;"><button onclick="stepLen(0,-1)">-</button><input type="text" id="len0_in" oninput="validateLen(0,this)"><button onclick="stepLen(0,1)">+</button></div></div>
+                        <div class="stepper-wrap"><span>L:</span><div class="stepper" style="border-color: var(--vl-border-strong);"><button onclick="stepLen(0,-1)">-</button><input type="text" id="len0_in" oninput="validateLen(0,this)"><button onclick="stepLen(0,1)">+</button></div></div>
                     </div>
                     <div style="display: flex; gap: 6px;">
                         <button class="tool-btn" onclick="transform(0, 'negate')">NEGATE</button>
@@ -72,14 +73,14 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 10px; background: #020617; padding: 18px 40px 18px 8px; border-radius: 12px; border: 1px solid #1e293b; border-left: 5px solid #f87171;">
+            <div style="display: flex; gap: 10px; background: var(--vl-deep); padding: 18px 40px 18px 8px; border-radius: 12px; border: 1px solid var(--vl-panel); border-left: 5px solid var(--vl-red);">
                 <div class="rot-container" onmouseenter="hoverRot=1;render()" onmouseleave="hoverRot=null;render()">
                     <div class="rot-scale"><span>359°</span><span>0°</span></div>
                     <input type="range" class="rot-slider" id="rotSlider1" min="0" max="359" step="1" oninput="rotateVec(1, this.value)">
                 </div>
                 <div style="flex: 1;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <span style="color: #f87171; font-weight: bold; font-size: 1.2rem;">Vector B</span>
+                        <span style="color: var(--vl-red); font-weight: bold; font-size: 1.2rem;">Vector B</span>
                         <div style="display: flex; gap: 12px;">
                             <div class="stepper-wrap"><span>X:</span><div class="stepper"><button onclick="step(1,'x',-1)">-</button><input type="text" id="bx_in" oninput="validateInput(1,'x',this)"><button onclick="step(1,'x',1)">+</button></div></div>
                             <div class="stepper-wrap"><span>Y:</span><div class="stepper"><button onclick="step(1,'y',-1)">-</button><input type="text" id="by_in" oninput="validateInput(1,'y',this)"><button onclick="step(1,'y',1)">+</button></div></div>
@@ -87,7 +88,7 @@
                     </div>
                     <div style="display: flex; align-items: center; gap: 12px; margin: 15px 0;">
                         <input type="range" class="vec-slider" id="slider1" min="0" max="5" step="0.01" oninput="updateLen(1, this.value)" style="flex: 1; margin: 0;">
-                        <div class="stepper-wrap"><span>L:</span><div class="stepper" style="border-color: #475569;"><button onclick="stepLen(1,-1)">-</button><input type="text" id="len1_in" oninput="validateLen(1,this)"><button onclick="stepLen(1,1)">+</button></div></div>
+                        <div class="stepper-wrap"><span>L:</span><div class="stepper" style="border-color: var(--vl-border-strong);"><button onclick="stepLen(1,-1)">-</button><input type="text" id="len1_in" oninput="validateLen(1,this)"><button onclick="stepLen(1,1)">+</button></div></div>
                     </div>
                     <div style="display: flex; gap: 6px;">
                         <button class="tool-btn" onclick="transform(1, 'negate')">NEGATE</button>
@@ -98,33 +99,33 @@
                 </div>
             </div>
 
-            <div style="background: #1e293b; padding: 22px; border-radius: 12px; border: 1px solid #334155;">
-                <div style="display: flex; justify-content: space-between; gap: 15px; border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px;">
-                    <div style="font-family: monospace; color: #cbd5e1; line-height: 1.8; font-size: 1rem;">
-                        Dot Product: <span id="resDot" style="color:#fff; font-weight:bold;">0.000</span><br>
-                        Cosine (θ): <span id="resCos" style="color:#fff;">0.000</span><br>
-                        Angle: <span id="resDeg" style="color:#fff;">0</span>° | <span id="resRad" style="color:#fff;">0.000</span> rad<br>
-                        Pi: <span id="resPi" style="color:#fff; font-weight: bold;">0.00π</span> <span id="resFrac" style="color:#fff; margin-left:10px;"></span>
+            <div style="background: var(--vl-panel); padding: 22px; border-radius: 12px; border: 1px solid var(--vl-border);">
+                <div style="display: flex; justify-content: space-between; gap: 15px; border-bottom: 1px solid var(--vl-border); padding-bottom: 15px; margin-bottom: 20px;">
+                    <div style="font-family: monospace; color: var(--vl-fg-2); line-height: 1.8; font-size: 1rem;">
+                        Dot Product: <span id="resDot" style="color:var(--vl-strong); font-weight:bold;">0.000</span><br>
+                        Cosine (θ): <span id="resCos" style="color:var(--vl-strong);">0.000</span><br>
+                        Angle: <span id="resDeg" style="color:var(--vl-strong);">0</span>° | <span id="resRad" style="color:var(--vl-strong);">0.000</span> rad<br>
+                        Pi: <span id="resPi" style="color:var(--vl-strong); font-weight: bold;">0.00π</span> <span id="resFrac" style="color:var(--vl-strong); margin-left:10px;"></span>
                     </div>
-                    <div style="font-family: monospace; color: #94a3b8; font-size: 0.9rem; text-align: right; line-height: 1.8;">
-                        <div id="algExp" style="color: #34d399;">A·B = AxBx + AyBy</div>
-                        <div id="algVal" style="color: #fff; font-size: 1.1rem;"></div>
-                        <div id="geoExp" style="color: #60a5fa;">A·B = |A||B|cosθ</div>
-                        <div id="geoVal" style="color: #fff; font-size: 1.1rem;"></div>
+                    <div style="font-family: monospace; color: var(--vl-muted); font-size: 0.9rem; text-align: right; line-height: 1.8;">
+                        <div id="algExp" style="color: var(--vl-green);">A·B = AxBx + AyBy</div>
+                        <div id="algVal" style="color: var(--vl-strong); font-size: 1.1rem;"></div>
+                        <div id="geoExp" style="color: var(--vl-blue);">A·B = |A||B|cosθ</div>
+                        <div id="geoVal" style="color: var(--vl-strong); font-size: 1.1rem;"></div>
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h4 style="margin:0; color:#34d399; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Basis Matrix</h4>
-                    <button onclick="transpose()" class="tool-btn" style="flex:none; padding: 4px 12px; border-color:#34d399; color:#34d399;">TRANSPOSE</button>
+                    <h4 style="margin:0; color:var(--vl-green); font-size:0.9rem; text-transform:uppercase; letter-spacing:1px;">Basis Matrix</h4>
+                    <button onclick="transpose()" class="tool-btn" style="flex:none; padding: 4px 12px; border-color:var(--vl-green); color:var(--vl-green);">TRANSPOSE</button>
                 </div>
                 
                 <div style="display: flex; justify-content: center;">
-                    <div style="border-left: 3px solid #fff; border-right: 3px solid #fff; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #0f172a; border-radius: 6px;">
-                        <div class="stepper-wrap"><span style="color:#60a5fa; font-size:0.8rem">A₁</span><div class="stepper" style="border-color:#60a5fa33;"><button onclick="step(0,'x',-1)">-</button><input type="text" id="m00_in" oninput="validateInput(0,'x',this)" style="color:#60a5fa;"><button onclick="step(0,'x',1)">+</button></div></div>
-                        <div class="stepper-wrap"><span style="color:#f87171; font-size:0.8rem">B₁</span><div class="stepper" style="border-color:#f8717133;"><button onclick="step(1,'x',-1)">-</button><input type="text" id="m01_in" oninput="validateInput(1,'x',this)" style="color:#f87171;"><button onclick="step(1,'x',1)">+</button></div></div>
-                        <div class="stepper-wrap"><span style="color:#60a5fa; font-size:0.8rem">A₂</span><div class="stepper" style="border-color:#60a5fa33;"><button onclick="step(0,'y',-1)">-</button><input type="text" id="m10_in" oninput="validateInput(0,'y',this)" style="color:#60a5fa;"><button onclick="step(0,'y',1)">+</button></div></div>
-                        <div class="stepper-wrap"><span style="color:#f87171; font-size:0.8rem">B₂</span><div class="stepper" style="border-color:#f8717133;"><button onclick="step(1,'y',-1)">-</button><input type="text" id="m11_in" oninput="validateInput(1,'y',this)" style="color:#f87171;"><button onclick="step(1,'y',1)">+</button></div></div>
+                    <div style="border-left: 3px solid var(--vl-strong); border-right: 3px solid var(--vl-strong); padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: var(--vl-bg); border-radius: 6px;">
+                        <div class="stepper-wrap"><span style="color:var(--vl-blue); font-size:0.8rem">A₁</span><div class="stepper" style="border-color:color-mix(in srgb, var(--vl-blue) 20%, transparent);"><button onclick="step(0,'x',-1)">-</button><input type="text" id="m00_in" oninput="validateInput(0,'x',this)" style="color:var(--vl-blue);"><button onclick="step(0,'x',1)">+</button></div></div>
+                        <div class="stepper-wrap"><span style="color:var(--vl-red); font-size:0.8rem">B₁</span><div class="stepper" style="border-color:color-mix(in srgb, var(--vl-red) 20%, transparent);"><button onclick="step(1,'x',-1)">-</button><input type="text" id="m01_in" oninput="validateInput(1,'x',this)" style="color:var(--vl-red);"><button onclick="step(1,'x',1)">+</button></div></div>
+                        <div class="stepper-wrap"><span style="color:var(--vl-blue); font-size:0.8rem">A₂</span><div class="stepper" style="border-color:color-mix(in srgb, var(--vl-blue) 20%, transparent);"><button onclick="step(0,'y',-1)">-</button><input type="text" id="m10_in" oninput="validateInput(0,'y',this)" style="color:var(--vl-blue);"><button onclick="step(0,'y',1)">+</button></div></div>
+                        <div class="stepper-wrap"><span style="color:var(--vl-red); font-size:0.8rem">B₂</span><div class="stepper" style="border-color:color-mix(in srgb, var(--vl-red) 20%, transparent);"><button onclick="step(1,'y',-1)">-</button><input type="text" id="m11_in" oninput="validateInput(1,'y',this)" style="color:var(--vl-red);"><button onclick="step(1,'y',1)">+</button></div></div>
                     </div>
                 </div>
             </div>
@@ -133,21 +134,21 @@
 </div>
 
 <style>
-    .custom-checkbox { display: flex; align-items: center; gap: 6px; cursor: pointer; color: #94a3b8; }
-    .custom-checkbox input { appearance: none; width: 16px; height: 16px; border: 2px solid #334155; border-radius: 4px; background: #0f172a; cursor: pointer; position: relative; }
-    .custom-checkbox input:checked { background: #34d399; border-color: #34d399; }
-    .custom-checkbox input:checked::after { content: '✓'; position: absolute; color: #0f172a; font-size: 12px; font-weight: bold; left: 2px; top: -2px; }
-    .dropdown-group { display: flex; align-items: center; gap: 5px; color: #94a3b8; }
-    .dropdown-group select { background: #1e293b; border: 1px solid #334155; color: #fff; border-radius: 4px; outline: none; cursor: pointer; font-size: 0.85rem; }
+    .custom-checkbox { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--vl-muted); }
+    .custom-checkbox input { appearance: none; width: 16px; height: 16px; border: 2px solid var(--vl-border); border-radius: 4px; background: var(--vl-bg); cursor: pointer; position: relative; }
+    .custom-checkbox input:checked { background: var(--vl-green); border-color: var(--vl-green); }
+    .custom-checkbox input:checked::after { content: '✓'; position: absolute; color: var(--vl-on-accent); font-size: 12px; font-weight: bold; left: 2px; top: -2px; }
+    .dropdown-group { display: flex; align-items: center; gap: 5px; color: var(--vl-muted); }
+    .dropdown-group select { background: var(--vl-panel); border: 1px solid var(--vl-border); color: var(--vl-strong); border-radius: 4px; outline: none; cursor: pointer; font-size: 0.85rem; }
     .stepper-wrap { display: flex; align-items: center; gap: 6px; }
-    .stepper-wrap > span { font-family: monospace; font-weight: bold; font-size: 0.85rem; color: #64748b; }
-    .stepper { display: flex; align-items: center; background: #1e293b; border-radius: 6px; overflow: hidden; border: 1px solid #334155; height: 32px; }
-    .stepper button { background: #334155; color: #fff; border: none; width: 24px; height: 100%; cursor: pointer; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
-    .stepper button:hover { background: #475569; }
-    .stepper input { width: 55px; background: transparent; border: none; color: #fff; text-align: center; font-family: monospace; font-size: 0.95rem; outline: none; padding: 0; }
-    .vec-slider { height: 10px; accent-color: #34d399; cursor: pointer; }
-    .tool-btn { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: #0f172a; color: #94a3b8; border: 1px solid #334155; border-radius: 4px; cursor: pointer; font-weight: bold; }
-    .tool-btn:hover { border-color: #34d399; color: #fff; }
+    .stepper-wrap > span { font-family: monospace; font-weight: bold; font-size: 0.85rem; color: var(--vl-faint); }
+    .stepper { display: flex; align-items: center; background: var(--vl-panel); border-radius: 6px; overflow: hidden; border: 1px solid var(--vl-border); height: 32px; }
+    .stepper button { background: var(--vl-border); color: var(--vl-strong); border: none; width: 24px; height: 100%; cursor: pointer; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
+    .stepper button:hover { background: var(--vl-border-strong); }
+    .stepper input { width: 55px; background: transparent; border: none; color: var(--vl-strong); text-align: center; font-family: monospace; font-size: 0.95rem; outline: none; padding: 0; }
+    .vec-slider { height: 10px; accent-color: var(--vl-green); cursor: pointer; }
+    .tool-btn { flex: 1; padding: 8px 4px; font-size: 0.75rem; background: var(--vl-bg); color: var(--vl-muted); border: 1px solid var(--vl-border); border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .tool-btn:hover { border-color: var(--vl-green); color: var(--vl-strong); }
     .rot-container { display: flex; align-items: center; gap: 8px; position: relative; width: 35px; border-radius: 6px; }
     /* Update these specific rules in your <style> block */
     .rot-slider { 
@@ -155,7 +156,7 @@
         appearance: none;
         width: 100px; 
         height: 6px; 
-        background: #1e293b; 
+        background: var(--vl-panel); 
         border-radius: 10px;
         transform: rotate(-90deg); 
         transform-origin: center; 
@@ -172,9 +173,9 @@
         appearance: none;
         width: 12px;
         height: 12px;
-        background: #34d399;
+        background: var(--vl-green);
         border-radius: 50%;
-        border: 2px solid #0f172a;
+        border: 2px solid var(--vl-bg);
         box-shadow: 0 0 2px rgba(0,0,0,0.5);
     }
 
@@ -182,14 +183,14 @@
     .rot-slider::-moz-range-thumb {
         width: 12px;
         height: 12px;
-        background: #34d399;
+        background: var(--vl-green);
         border-radius: 50%;
-        border: 2px solid #0f172a;
+        border: 2px solid var(--vl-bg);
         box-shadow: 0 0 2px rgba(0,0,0,0.5);
     }
     .rot-scale { 
         display: flex; flex-direction: column; justify-content: space-between; height: 100%; 
-        font-family: monospace; font-size: 0.65rem; color: #64748b; padding-left: 20px; 
+        font-family: monospace; font-size: 0.65rem; color: var(--vl-faint); padding-left: 20px; 
     }
 </style>
 
@@ -198,13 +199,17 @@
     const ctx = canvas.getContext('2d');
     const center = 250, scale = 70;
     let vectors = [
-        {x:1, y:0, color:'#60a5fa', secondary:'#93c5fd'}, 
-        {x:0, y:1, color:'#f87171', secondary:'#fca5a5'}
+        {x:1, y:0, color:'blue', secondary:'blue-2'}, 
+        {x:0, y:1, color:'red', secondary:'red-2'}
     ];
     let activeVec = null, hoverRot = null;
+    // Colours are theme tokens (--vl-*), resolved on every render so the site toggle applies live.
+    const vsRoot = document.getElementById('vs_container');
+    let vsP = {};
+    const vsCol = (c) => vsP[c] || c;
 
     function resetAll() {
-        vectors = [{x:1, y:0, color:'#60a5fa', secondary:'#93c5fd'}, {x:0, y:1, color:'#f87171', secondary:'#fca5a5'}];
+        vectors = [{x:1, y:0, color:'blue', secondary:'blue-2'}, {x:0, y:1, color:'red', secondary:'red-2'}];
         document.getElementById('posSnapSelect').value = "0.25";
         document.getElementById('rotSnapSelect').value = "15";
         document.getElementById('angleModeToggle').checked = false;
@@ -312,25 +317,25 @@
         ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = "11px monospace";
         for (let i = -5; i <= 5; i += 0.5) {
             let isMain = (i % 1 === 0); ctx.lineWidth = (i === 0) ? 2 : (isMain ? 1 : 0.5);
-            ctx.strokeStyle = (i === 0) ? '#475569' : '#1e293b';
+            ctx.strokeStyle = (i === 0) ? vsP['grid-strong'] : vsP.grid;
             let p = center + i * scale;
             ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, 500); ctx.stroke();
             ctx.beginPath(); ctx.moveTo(0, p); ctx.lineTo(500, p); ctx.stroke();
-            if (isMain && i !== 0) { ctx.fillStyle = "#64748b"; ctx.fillText(i, p, center + 15); ctx.fillText(i, center - 15, center - i * scale); }
+            if (isMain && i !== 0) { ctx.fillStyle = vsP.label; ctx.fillText(i, p, center + 15); ctx.fillText(i, center - 15, center - i * scale); }
         }
     }
 
     function drawAngleArc(v1, v2, color, radius, isDashed = false) {
         let a1 = Math.atan2(-v1.y, v1.x), a2 = Math.atan2(-v2.y, v2.x), diff = a2 - a1;
         while (diff < -Math.PI) diff += Math.PI * 2; while (diff > Math.PI) diff -= Math.PI * 2;
-        ctx.strokeStyle = color; ctx.lineWidth = 2; if (isDashed) ctx.setLineDash([5, 5]);
+        color = vsCol(color); ctx.strokeStyle = color; ctx.lineWidth = 2; if (isDashed) ctx.setLineDash([5, 5]);
         ctx.beginPath(); ctx.arc(center, center, radius, a1, a1 + diff, diff < 0); ctx.stroke(); ctx.setLineDash([]);
         let mid = a1 + diff / 2; ctx.fillStyle = color; ctx.font = "bold 11px monospace";
         ctx.fillText(Math.abs(diff*180/Math.PI).toFixed(1)+"°", center+(radius+20)*Math.cos(mid), center+(radius+20)*Math.sin(mid));
     }
 
     function drawArrow(x0, y0, x1, y1, color, isDotted = false) {
-        ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 4;
+        color = vsCol(color); ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 4;
         if (isDotted) { ctx.setLineDash([5, 5]); ctx.lineWidth = 2; ctx.globalAlpha = 0.4; }
         ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
         const ang = Math.atan2(y0 - y1, x1 - x0);
@@ -342,10 +347,11 @@
     }
 
     function render(mode) {
+        vsP = VLTheme.read(vsRoot, ['blue', 'red', 'green', 'blue-2', 'red-2', 'grid', 'grid-strong', 'label']);
         ctx.clearRect(0, 0, 500, 500); drawGrid();
         const [A, B] = vectors;
         
-        if (document.getElementById('arcToggle').checked) drawAngleArc(A, B, "#34d399", 45, true);
+        if (document.getElementById('arcToggle').checked) drawAngleArc(A, B, "green", 45, true);
         
         // Updated to use the specific vector's color when hovering/rotating
         if (hoverRot !== null) { 
@@ -360,7 +366,7 @@
             const tx = center+v.x*scale, ty = center-v.y*scale;
             if (showGhost) drawArrow(center - v.x * scale, center + v.y * scale, center, center, v.secondary, true);
             if (showPerp) {
-                ctx.strokeStyle = v.secondary; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+                ctx.strokeStyle = vsCol(v.secondary); ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
                 const px = -v.y, py = v.x;
                 ctx.beginPath(); ctx.moveTo(center - px * 1000, center + py * 1000); ctx.lineTo(center + px * 1000, center - py * 1000); ctx.stroke();
                 ctx.setLineDash([]);
@@ -376,7 +382,7 @@
                     // NEW: Extend target vector with a ghost line if projection is further than the vector tip
                     const projMagSq = projX**2 + projY**2;
                     if (projMagSq > magSq || dot < 0) {
-                        ctx.strokeStyle = other.secondary;
+                        ctx.strokeStyle = vsCol(other.secondary);
                         ctx.lineWidth = 1;
                         ctx.setLineDash([4, 4]);
                         ctx.beginPath();
@@ -385,7 +391,7 @@
                         ctx.stroke();
                     }
 
-                    ctx.strokeStyle = v.secondary; ctx.lineWidth = 2; ctx.setLineDash([3, 3]);
+                    ctx.strokeStyle = vsCol(v.secondary); ctx.lineWidth = 2; ctx.setLineDash([3, 3]);
                     ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(px, py); ctx.stroke();
                     ctx.setLineDash([]);
                 }
@@ -428,7 +434,7 @@
 
     canvas.addEventListener('mousemove', (e) => {
         const r = canvas.getBoundingClientRect(), x = ((e.clientX-r.left)*(500/r.width)-center)/scale, y = -((e.clientY-r.top)*(500/r.height)-center)/scale;
-        document.getElementById('originCoords').innerHTML = `<span>Pos: (${x.toFixed(2)}, ${y.toFixed(2)})</span><span style="color: #34d399;">Dist: ${Math.sqrt(x*x+y*y).toFixed(2)}</span>`;
+        document.getElementById('originCoords').innerHTML = `<span>Pos: (${x.toFixed(2)}, ${y.toFixed(2)})</span><span style="color: var(--vl-green);">Dist: ${Math.sqrt(x*x+y*y).toFixed(2)}</span>`;
         if (activeVec) {
             let snap = parseFloat(document.getElementById('posSnapSelect').value);
             activeVec.x = Math.round(x/snap)*snap; activeVec.y = Math.round(y/snap)*snap;
@@ -441,5 +447,6 @@
         vectors.forEach(v => { if (Math.sqrt((mx-(center+v.x*scale))**2+(my-(center-v.y*scale))**2) < 30) activeVec = v; });
     });
     window.addEventListener('mouseup', () => activeVec = null);
+    VLTheme.onChange(() => render());
     render();
 </script>

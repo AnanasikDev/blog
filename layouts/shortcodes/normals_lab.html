@@ -1,0 +1,483 @@
+{{- /*
+  NormalLab: a procedural "circle in a plane" normal map.
+    Inspect  - hover or drag over the texture: the normal, tangent and bitangent at that pixel (top view + 3D view)
+    Lighting - drag to move a light; the flat texture is shaded from its normals only
+    Channels - view R, G or B alone, with what each one stores
+  Plus a live RGB <-> XYZ breakdown of the probed pixel. Colours follow the site theme (vectorlab-theme.html).
+*/ -}}
+{{ if not (.Page.Store.Get "vl-theme") }}{{ .Page.Store.Set "vl-theme" true }}{{ partial "vectorlab-theme.html" . }}{{ end }}
+{{ if not (.Page.Store.Get "nl-style") }}{{ .Page.Store.Set "nl-style" true }}
+<style>
+    .nl-root { background: var(--vl-bg); color: var(--vl-fg); padding: 25px; border-radius: 20px; max-width: 1050px; margin: 20px auto; font-family: system-ui, sans-serif; font-size: 14px; line-height: 1.45; box-shadow: var(--vl-shadow); border: 1px solid var(--vl-panel); user-select: none; }
+    .nl-root *, .nl-root *::before, .nl-root *::after { box-sizing: border-box; }
+    .nl-root [hidden] { display: none !important; }
+    .nl-root h2, .nl-root h4, .nl-root p { margin: 0; padding: 0; border: 0; }
+    .nl-root .x { color: var(--vl-x); } .nl-root .y { color: var(--vl-y); } .nl-root .z { color: var(--vl-z); }
+
+    .nl-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px 20px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 2px solid var(--vl-panel); }
+    .nl-head-l, .nl-head-r { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+    .nl-title { color: var(--vl-z); font-size: 24px; letter-spacing: -1px; font-weight: 700; }
+
+    .nl-seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 9px; background: var(--vl-panel); border: 1px solid var(--vl-border); }
+    .nl-seg button { font: inherit; font-size: 12.5px; font-weight: 600; padding: 5px 12px; border: 0; border-radius: 6px; background: none; color: var(--vl-muted); cursor: pointer; transition: background .15s, color .15s; }
+    .nl-seg button:hover { color: var(--vl-fg); }
+    .nl-seg button.on { background: var(--vl-bg); color: var(--vl-fg); box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+    .nl-seg button.on.x { color: var(--vl-x); } .nl-seg button.on.y { color: var(--vl-y); } .nl-seg button.on.z { color: var(--vl-z); }
+
+    .nl-body { display: flex; flex-wrap: wrap; gap: 26px; }
+    .nl-left { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+    .nl-texwrap { position: relative; }
+    .nl-tex { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 12px; border: 1px solid var(--vl-border); cursor: crosshair; touch-action: none; image-rendering: auto; }
+    .nl-texwrap .nl-seg { position: absolute; top: 10px; left: 10px; background: color-mix(in srgb, var(--vl-panel) 88%, transparent); backdrop-filter: blur(6px); }
+    .nl-hint { color: var(--vl-muted); font-size: 13px; min-height: 2.9em; }
+
+    .nl-right { flex: 1 1 380px; min-width: 0; max-width: 460px; display: flex; flex-direction: column; gap: 14px; }
+    .nl-card { background: var(--vl-panel); border: 1px solid var(--vl-border); border-radius: 12px; padding: 14px 16px; }
+    .nl-card-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .nl-card h4 { color: var(--vl-faint); font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; }
+    .nl-3d { display: block; width: 100%; height: 250px; border-radius: 9px; background: var(--vl-canvas); border: 1px solid var(--vl-border); cursor: grab; touch-action: none; }
+    .nl-3d:active { cursor: grabbing; }
+    .nl-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-size: 12px; color: var(--vl-faint); }
+    .nl-legend b { font-weight: 700; }
+
+    .nl-check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; color: var(--vl-muted); font-size: 12px; }
+    .nl-check input { appearance: none; -webkit-appearance: none; width: 15px; height: 15px; margin: 0; border: 2px solid var(--vl-border); border-radius: 4px; background: var(--vl-bg); cursor: pointer; position: relative; }
+    .nl-check input:checked { background: var(--vl-z); border-color: var(--vl-z); }
+    .nl-check input:checked::after { content: '✓'; position: absolute; color: var(--vl-on-accent); font-size: 10px; font-weight: bold; left: 2px; top: -2px; }
+
+    .nl-pixel { display: flex; align-items: center; gap: 10px; }
+    .nl-swatch { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--vl-border); flex-shrink: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+    .nl-hex { font-family: ui-monospace, monospace; font-size: 13px; color: var(--vl-fg-2); }
+    .nl-vals { font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.75; color: var(--vl-fg-2); }
+    .nl-vals b { font-weight: 600; }
+    .nl-vals .lbl { display: inline-block; width: 2.2em; color: var(--vl-faint); }
+
+    .nl-map { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px 12px; }
+    .nl-map-l { font-family: ui-monospace, monospace; font-size: 13px; font-weight: 700; white-space: nowrap; }
+    .nl-map-l .arrow { color: var(--vl-faint); font-weight: 400; margin: 0 2px; }
+    .nl-bar { position: relative; height: 14px; border-radius: 999px; }
+    .nl-bar::before { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: var(--vl-faint); opacity: .6; }
+    .nl-mark { position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%; transform: translate(-50%, -50%); background: var(--vl-bg); border: 3px solid var(--vl-fg); box-shadow: 0 1px 4px rgba(0,0,0,.4); transition: left .08s linear; }
+    .nl-ticks { grid-column: 2; display: flex; justify-content: space-between; margin-top: -8px; font-family: ui-monospace, monospace; font-size: 10.5px; color: var(--vl-faint); }
+    .nl-map-v { font-family: ui-monospace, monospace; font-size: 12.5px; color: var(--vl-fg-2); text-align: right; white-space: nowrap; min-width: 8.5em; }
+    .nl-formula { margin-top: 12px; padding: 9px 12px; border-radius: 8px; background: var(--vl-deep); border: 1px solid var(--vl-border); font-family: ui-monospace, monospace; font-size: 12.5px; color: var(--vl-fg-2); line-height: 1.7; }
+    .nl-formula span { color: var(--vl-faint); }
+
+    .nl-dirs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .nl-dir { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; background: var(--vl-deep); border: 1px solid var(--vl-border); min-width: 0; }
+    .nl-dir i { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,.15); }
+    .nl-dir div { min-width: 0; font-size: 11.5px; line-height: 1.3; }
+    .nl-dir b { display: block; font-family: ui-monospace, monospace; font-size: 12px; color: var(--vl-fg); }
+    .nl-dir span { color: var(--vl-faint); font-family: ui-monospace, monospace; font-size: 10.5px; white-space: nowrap; }
+
+    @media (max-width: 560px) {
+        .nl-root { padding: 16px; }
+        .nl-dirs { grid-template-columns: repeat(2, 1fr); }
+        .nl-map-v { min-width: 0; }
+    }
+</style>
+{{ end }}
+<div class="vl-root nl-root">
+    <div class="nl-head">
+        <div class="nl-head-l">
+            <h2 class="nl-title">&lt;NormalLab /&gt;</h2>
+            <div class="nl-seg" data-nl="mode" role="group" aria-label="Mode">
+                <button type="button" data-v="inspect" class="on">Inspect</button>
+                <button type="button" data-v="light">Lighting</button>
+                <button type="button" data-v="channels">Channels</button>
+            </div>
+        </div>
+        <div class="nl-head-r">
+            <div class="nl-seg" data-nl="shape" role="group" aria-label="Shape">
+                <button type="button" data-v="dome" class="on">Bump</button>
+                <button type="button" data-v="dent">Dent</button>
+            </div>
+            <div class="nl-seg" data-nl="conv" role="group" aria-label="Green channel convention" title="Which way the green channel points">
+                <button type="button" data-v="gl" class="on">OpenGL Y+</button>
+                <button type="button" data-v="dx">DirectX Y−</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="nl-body">
+        <div class="nl-left">
+            <div class="nl-texwrap">
+                <canvas class="nl-tex" width="512" height="512" aria-label="Normal map texture"></canvas>
+                <div class="nl-seg" data-nl="chan" role="group" aria-label="Channel" hidden>
+                    <button type="button" data-v="r" class="on x">R = X</button>
+                    <button type="button" data-v="g" class="y">G = Y</button>
+                    <button type="button" data-v="b" class="z">B = Z</button>
+                </div>
+            </div>
+            <p class="nl-hint"></p>
+        </div>
+
+        <div class="nl-right">
+            <div class="nl-card">
+                <div class="nl-card-h">
+                    <h4>Surface frame in 3D</h4>
+                    <label class="nl-check" title="The flat mesh's own tangent space, which the colours are measured in"><input type="checkbox" data-nl="mesh" checked><span>Mesh TBN</span></label>
+                </div>
+                <canvas class="nl-3d"></canvas>
+                <div class="nl-legend">
+                    <span><b class="x">T</b> tangent</span><span><b class="y">B</b> bitangent</span><span><b class="z">N</b> normal</span><span>· drag to orbit</span>
+                </div>
+            </div>
+
+            <div class="nl-card">
+                <div class="nl-card-h">
+                    <h4>Probed pixel</h4>
+                    <div class="nl-pixel"><code class="nl-hex"></code><span class="nl-swatch"></span></div>
+                </div>
+                <div class="nl-vals">
+                    <div><span class="lbl z">N</span>= <span data-o="n"></span></div>
+                    <div><span class="lbl x">T</span>= <span data-o="t"></span></div>
+                    <div><span class="lbl y">B</span>= <span data-o="b"></span></div>
+                </div>
+            </div>
+
+            <div class="nl-card">
+                <div class="nl-card-h"><h4>Colour ↔ direction</h4></div>
+                <div class="nl-map">
+                    <div class="nl-map-l x">X <span class="arrow">→</span> R</div>
+                    <div class="nl-bar" style="background: linear-gradient(90deg, #000, #ff0000)"><span class="nl-mark" data-o="mr"></span></div>
+                    <div class="nl-map-v" data-o="vr"></div>
+                    <div class="nl-ticks"><span>−1 · 0</span><span>0 · 128</span><span>+1 · 255</span></div>
+                    <div></div><div></div>
+
+                    <div class="nl-map-l y">Y <span class="arrow">→</span> G</div>
+                    <div class="nl-bar" style="background: linear-gradient(90deg, #000, #00ff00)"><span class="nl-mark" data-o="mg"></span></div>
+                    <div class="nl-map-v" data-o="vg"></div>
+                    <div class="nl-ticks" data-o="tg"><span>−1 · 0</span><span>0 · 128</span><span>+1 · 255</span></div>
+                    <div></div><div></div>
+
+                    <div class="nl-map-l z">Z <span class="arrow">→</span> B</div>
+                    <div class="nl-bar" style="background: linear-gradient(90deg, #000, #0000ff)"><span class="nl-mark" data-o="mb"></span></div>
+                    <div class="nl-map-v" data-o="vb"></div>
+                    <div class="nl-ticks"><span>−1 · 0</span><span>0 · 128</span><span>+1 · 255</span></div>
+                </div>
+                <div class="nl-formula">
+                    colour = (direction + 1) / 2 × 255<br>
+                    direction = colour / 255 × 2 − 1<br>
+                    <span data-o="why"></span>
+                </div>
+                <div class="nl-dirs" data-o="dirs"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+(function () {
+    const root = document.currentScript.previousElementSibling;
+    const $ = (s) => root.querySelector(s);
+    const S = 512, C = S / 2, R = 170;          // texture size, centre, circle radius (px)
+    const tex = $('.nl-tex'), tctx = tex.getContext('2d');
+    const view = $('.nl-3d'), vctx = view.getContext('2d');
+    const off = document.createElement('canvas'); off.width = off.height = S;
+    const octx = off.getContext('2d');
+
+    const st = {
+        mode: 'inspect', shape: 'dome', conv: 'gl', chan: 'r', mesh: true,
+        probe: { x: C + R * 0.55, y: C - R * 0.35 },
+        light: { x: -0.45, y: 0.5 },
+        yaw: -0.55, pitch: 0.6,
+    };
+    let P = {};
+
+    // ---- math ---------------------------------------------------------------------------
+    const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    const norm = (a) => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+
+    // Tangent space: X = right, Y = up (in the texture), Z = out of the surface.
+    function normalAtUV(u, v) {
+        const r2 = u * u + v * v;
+        if (r2 >= 1) return [0, 0, 1];
+        const z = Math.sqrt(1 - r2);
+        return st.shape === 'dome' ? [u, v, z] : [-u, -v, z];
+    }
+    const normalAt = (px, py) => normalAtUV((px - C) / R, (C - py) / R);
+    function heightAt(u, v) {
+        const r2 = u * u + v * v;
+        if (r2 >= 1) return 0;
+        return (st.shape === 'dome' ? 1 : -1) * Math.sqrt(1 - r2);
+    }
+    // The bumped surface's own frame: tangent = X made perpendicular to N, bitangent = N × T.
+    function frame(n) {
+        const t = norm([1 - n[0] * n[0], -n[0] * n[1], -n[0] * n[2]]);
+        return { t, b: cross(n, t), n };
+    }
+    const enc = (c) => Math.round((c + 1) / 2 * 255);
+    const encode = (n) => [enc(n[0]), enc(st.conv === 'gl' ? n[1] : -n[1]), enc(n[2])];
+    function lightDir() {
+        let { x, y } = st.light;
+        const l = Math.hypot(x, y);
+        if (l > 0.97) { x *= 0.97 / l; y *= 0.97 / l; }
+        return [x, y, Math.sqrt(1 - x * x - y * y)];
+    }
+
+    // ---- texture --------------------------------------------------------------------------
+    function shade(n, L, H, ch) {
+        if (st.mode === 'light') {
+            const diff = Math.max(0, dot(n, L)), spec = Math.pow(Math.max(0, dot(n, H)), 48) * 0.45, k = 0.1 + 0.9 * diff;
+            return [205 * k + 255 * spec, 200 * k + 245 * spec, 192 * k + 235 * spec];
+        }
+        const e = encode(n);
+        return st.mode === 'channels' ? [e[ch], e[ch], e[ch]] : e;
+    }
+
+    function bake() {
+        const img = octx.createImageData(S, S), d = img.data;
+        const L = lightDir(), H = norm([L[0], L[1], L[2] + 1]);
+        const ch = { r: 0, g: 1, b: 2 }[st.chan];
+        const edge = 1.5 / R;
+        for (let py = 0; py < S; py++) {
+            for (let px = 0; px < S; px++) {
+                const u = (px + 0.5 - C) / R, v = (C - py - 0.5) / R, rr = Math.sqrt(u * u + v * v);
+                let c;
+                if (Math.abs(rr - 1) < edge) {
+                    // smooth the rim with 4 sub-samples
+                    c = [0, 0, 0];
+                    for (const [ox, oy] of [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]]) {
+                        const s = shade(normalAt(px + ox, py + oy), L, H, ch);
+                        c[0] += s[0] / 4; c[1] += s[1] / 4; c[2] += s[2] / 4;
+                    }
+                } else c = shade(normalAtUV(u, v), L, H, ch);
+                const i = (py * S + px) * 4;
+                d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
+            }
+        }
+        octx.putImageData(img, 0, 0);
+    }
+
+    // ---- 2D drawing helpers -----------------------------------------------------------------
+    function arrow(g, x0, y0, x1, y1, color, { width = 3, head = 10, outline = true, dash = null, alpha = 1 } = {}) {
+        const len = Math.hypot(x1 - x0, y1 - y0);
+        g.save();
+        g.globalAlpha = alpha;
+        g.lineCap = 'round';
+        const ang = Math.atan2(y1 - y0, x1 - x0), h = Math.min(head, len * 0.6);
+        const shaft = () => { g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1 - Math.cos(ang) * h * 0.7, y1 - Math.sin(ang) * h * 0.7); g.stroke(); };
+        const tip = () => {
+            g.beginPath(); g.moveTo(x1, y1);
+            g.lineTo(x1 - h * Math.cos(ang - 0.45), y1 - h * Math.sin(ang - 0.45));
+            g.lineTo(x1 - h * Math.cos(ang + 0.45), y1 - h * Math.sin(ang + 0.45));
+            g.closePath();
+        };
+        if (outline && len > 1) {
+            g.strokeStyle = 'rgba(0,0,0,0.55)'; g.lineWidth = width + 3; shaft();
+            tip(); g.lineWidth = 3; g.lineJoin = 'round'; g.stroke();
+        }
+        g.strokeStyle = color; g.fillStyle = color; g.lineWidth = width;
+        if (dash) g.setLineDash(dash);
+        if (len > 1) { shaft(); g.setLineDash([]); tip(); g.fill(); }
+        g.restore();
+    }
+    function label(g, text, x, y, color) {
+        g.save();
+        g.font = 'bold 14px system-ui, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.lineWidth = 4; g.strokeStyle = 'rgba(0,0,0,0.6)'; g.strokeText(text, x, y);
+        g.fillStyle = color; g.fillText(text, x, y);
+        g.restore();
+    }
+
+    // ---- texture view ----------------------------------------------------------------------------
+    function drawTex() {
+        tctx.drawImage(off, 0, 0);
+        const { x: px, y: py } = st.probe;
+        const n = normalAt(px, py), f = frame(n), K = 78;
+
+        if (st.mode === 'light') {
+            // reachable light positions + the light itself
+            const LR = C - 22, lx = C + st.light.x * LR, ly = C - st.light.y * LR;
+            tctx.save();
+            tctx.strokeStyle = 'rgba(255,255,255,0.35)'; tctx.setLineDash([4, 6]); tctx.lineWidth = 1.5;
+            tctx.beginPath(); tctx.arc(C, C, LR, 0, Math.PI * 2); tctx.stroke();
+            tctx.setLineDash([]);
+            const glow = tctx.createRadialGradient(lx, ly, 0, lx, ly, 26);
+            glow.addColorStop(0, 'rgba(255,236,170,0.95)'); glow.addColorStop(1, 'rgba(255,200,80,0)');
+            tctx.fillStyle = glow; tctx.beginPath(); tctx.arc(lx, ly, 26, 0, Math.PI * 2); tctx.fill();
+            tctx.fillStyle = '#fff7d6'; tctx.beginPath(); tctx.arc(lx, ly, 7, 0, Math.PI * 2); tctx.fill();
+            tctx.restore();
+        }
+
+        // probe marker
+        tctx.save();
+        tctx.lineWidth = 2; tctx.strokeStyle = 'rgba(0,0,0,0.55)';
+        tctx.beginPath(); tctx.arc(px, py, 7, 0, Math.PI * 2); tctx.stroke();
+        tctx.strokeStyle = '#fff'; tctx.lineWidth = 1.5;
+        tctx.beginPath(); tctx.arc(px, py, 7, 0, Math.PI * 2); tctx.stroke();
+        tctx.restore();
+
+        // top-down projections (x right, y up); N's length shows how far it leans
+        const v2 = (w) => [px + w[0] * K, py - w[1] * K];
+        if (st.mode !== 'light') {
+            const [tx, ty] = v2(f.t), [bx, by] = v2(f.b);
+            arrow(tctx, px, py, tx, ty, P.x); label(tctx, 'T', tx + (tx - px) * 0.18, ty + (ty - py) * 0.18, P.x);
+            arrow(tctx, px, py, bx, by, P.y); label(tctx, 'B', bx + (bx - px) * 0.18, by + (by - py) * 0.18, P.y);
+        }
+        const [nx, ny] = v2(n);
+        arrow(tctx, px, py, nx, ny, P.z, { width: 3.5 });
+        const lean = Math.hypot(nx - px, ny - py);
+        label(tctx, 'N', lean > 12 ? nx + (nx - px) * 0.2 : px + 16, lean > 12 ? ny + (ny - py) * 0.2 : py - 16, P.z);
+    }
+
+    // ---- 3D view -----------------------------------------------------------------------------
+    let VW = 400, VH = 250;
+    function sizeView() {
+        const dpr = window.devicePixelRatio || 1;
+        VW = view.clientWidth || 400; VH = view.clientHeight || 250;
+        view.width = Math.round(VW * dpr); view.height = Math.round(VH * dpr);
+        vctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function proj(p) {
+        const cy = Math.cos(st.yaw), sy = Math.sin(st.yaw), cp = Math.cos(st.pitch), sp = Math.sin(st.pitch);
+        const x1 = p[0] * cy - p[1] * sy, y1 = p[0] * sy + p[1] * cy;
+        const K = Math.min(VW, VH * 1.6) / 4.2;
+        return [VW / 2 + K * x1, VH / 2 + VH * 0.1 - K * (y1 * sp + p[2] * cp)];
+    }
+    function draw3D() {
+        vctx.clearRect(0, 0, VW, VH);
+        const E = 1.6, step = 0.2, seg = 0.05;
+        vctx.lineWidth = 1.2;
+        // wireframe of the surface, each piece tinted with its normal-map colour
+        for (let a = -E; a <= E + 1e-9; a += step) {
+            for (const along of [0, 1]) {
+                let prev = null;
+                for (let s = -E; s <= E + 1e-9; s += seg) {
+                    const u = along ? a : s, v = along ? s : a;
+                    const p = proj([u, v, heightAt(u, v)]);
+                    if (prev) {
+                        const c = encode(normalAtUV(u, v));
+                        vctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},0.75)`;
+                        vctx.beginPath(); vctx.moveTo(prev[0], prev[1]); vctx.lineTo(p[0], p[1]); vctx.stroke();
+                    }
+                    prev = p;
+                }
+            }
+        }
+        const u = (st.probe.x - C) / R, v = (C - st.probe.y) / R;
+        const o = [u, v, heightAt(u, v)], n = normalAtUV(u, v), f = frame(n), Lg = 0.75;
+        const tip = (w) => proj([o[0] + w[0] * Lg, o[1] + w[1] * Lg, o[2] + w[2] * Lg]);
+        const O = proj(o);
+        if (st.mesh) {
+            for (const [w, c] of [[[1, 0, 0], P.x], [[0, 1, 0], P.y], [[0, 0, 1], P.z]]) {
+                const T = tip(w);
+                arrow(vctx, O[0], O[1], T[0], T[1], c, { width: 1.5, head: 7, outline: false, dash: [3, 4], alpha: 0.55 });
+            }
+        }
+        if (st.mode === 'light') {
+            const L = lightDir(), T = tip(L);
+            arrow(vctx, O[0], O[1], T[0], T[1], P.yellow, { width: 2.5, head: 9 });
+            label(vctx, 'L', T[0] + (T[0] - O[0]) * 0.15, T[1] + (T[1] - O[1]) * 0.15, P.yellow);
+        }
+        for (const [w, c, name] of [[f.t, P.x, 'T'], [f.b, P.y, 'B'], [f.n, P.z, 'N']]) {
+            const T = tip(w);
+            arrow(vctx, O[0], O[1], T[0], T[1], c, { width: 3, head: 10 });
+            label(vctx, name, T[0] + (T[0] - O[0]) * 0.16, T[1] + (T[1] - O[1]) * 0.16, c);
+        }
+        vctx.fillStyle = '#fff'; vctx.strokeStyle = 'rgba(0,0,0,0.6)'; vctx.lineWidth = 2;
+        vctx.beginPath(); vctx.arc(O[0], O[1], 4, 0, Math.PI * 2); vctx.fill(); vctx.stroke();
+    }
+
+    // ---- readouts -------------------------------------------------------------------------------
+    const out = {};
+    root.querySelectorAll('[data-o]').forEach((el) => { out[el.dataset.o] = el; });
+    const f2 = (x) => (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(2);
+    const vec = (w) => `(<b class="x">${f2(w[0])}</b>, <b class="y">${f2(w[1])}</b>, <b class="z">${f2(w[2])}</b>)`;
+    const hex = (c) => '#' + c.map((x) => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+
+    function updateInfo() {
+        const n = normalAt(st.probe.x, st.probe.y), f = frame(n), c = encode(n);
+        out.n.innerHTML = vec(n); out.t.innerHTML = vec(f.t); out.b.innerHTML = vec(f.b);
+        $('.nl-swatch').style.background = `rgb(${c[0]},${c[1]},${c[2]})`;
+        $('.nl-hex').textContent = `${hex(c)} · (${c.join(', ')})`;
+        const comps = [n[0], st.conv === 'gl' ? n[1] : -n[1], n[2]];
+        ['r', 'g', 'b'].forEach((k, i) => {
+            out['m' + k].style.left = `${(c[i] / 255) * 100}%`;
+            out['v' + k].textContent = `${f2(comps[i])} → ${c[i]}`;
+        });
+        out.vg.textContent = `${st.conv === 'dx' ? '−Y ' : ''}${f2(comps[1])} → ${c[1]}`;
+    }
+
+    function updateStatic() {
+        out.why.textContent = st.conv === 'gl'
+            ? 'Flat (0, 0, +1) → (128, 128, 255): the lavender blue of every normal map.'
+            : 'DirectX stores −Y in green, so "up" is dark. Flat is still (128, 128, 255).';
+        const dirs = [
+            ['+X', 'faces right', [1, 0, 0]], ['−X', 'faces left', [-1, 0, 0]], ['+Z', 'flat, faces out', [0, 0, 1]],
+            ['+Y', 'faces up', [0, 1, 0]], ['−Y', 'faces down', [0, -1, 0]], ['45°', 'up-right tilt', norm([0.5, 0.5, 0.707])],
+        ];
+        out.dirs.innerHTML = dirs.map(([name, desc, d]) => {
+            const c = encode(d);
+            return `<div class="nl-dir" title="${desc}"><i style="background: rgb(${c.join(',')})"></i><div><b>${name}</b><span>${c.join(', ')}</span></div></div>`;
+        }).join('');
+        const hints = {
+            inspect: 'Hover or drag over the texture to probe a pixel. The arrows are seen from above: the longer N gets, the more the surface leans that way.',
+            light: 'Drag to move the light. The image is completely flat; the bump is only the normals catching the light (N · L).',
+            channels: {
+                r: 'Red stores X: dark where the surface faces left, bright where it faces right, 50 % grey where it does not lean sideways.',
+                g: st.conv === 'gl'
+                    ? 'Green stores Y: dark where the surface faces down, bright where it faces up (OpenGL convention).'
+                    : 'Green stores −Y here: bright where the surface faces down, dark where it faces up (DirectX convention).',
+                b: 'Blue stores Z: how directly the surface faces out. Flat is brightest and a visible surface never drops below half, which is why normal maps look blue.',
+            }[st.chan],
+        };
+        $('.nl-hint').textContent = hints[st.mode];
+        $('[data-nl="chan"]').hidden = st.mode !== 'channels';
+    }
+
+    function readTheme() { P = VLTheme.read(root, ['x', 'y', 'z', 'yellow']); }
+    function redraw() { drawTex(); draw3D(); updateInfo(); }
+    function full() { readTheme(); bake(); updateStatic(); redraw(); }
+
+    // ---- input ------------------------------------------------------------------------------------
+    root.querySelectorAll('.nl-seg[data-nl]').forEach((seg) => {
+        seg.addEventListener('click', (e) => {
+            const b = e.target.closest('button[data-v]');
+            if (!b) return;
+            seg.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+            st[seg.dataset.nl] = b.dataset.v;
+            full();
+        });
+    });
+    $('[data-nl="mesh"]').addEventListener('change', (e) => { st.mesh = e.target.checked; draw3D(); });
+
+    const texPos = (e) => {
+        const r = tex.getBoundingClientRect();
+        return { x: Math.max(0, Math.min(S - 1, (e.clientX - r.left) * S / r.width)), y: Math.max(0, Math.min(S - 1, (e.clientY - r.top) * S / r.height)) };
+    };
+    let dragging = false;
+    function texInput(e) {
+        const p = texPos(e);
+        if (st.mode === 'light') {
+            if (!dragging) return;
+            const LR = C - 22;
+            st.light = { x: (p.x - C) / LR, y: (C - p.y) / LR };
+            bake();
+        } else st.probe = p;
+        redraw();
+    }
+    tex.addEventListener('pointerdown', (e) => { dragging = true; tex.setPointerCapture(e.pointerId); texInput(e); });
+    tex.addEventListener('pointermove', texInput);
+    tex.addEventListener('pointerup', () => { dragging = false; });
+    tex.addEventListener('pointercancel', () => { dragging = false; });
+
+    let orbit = null;
+    view.addEventListener('pointerdown', (e) => { orbit = { x: e.clientX, y: e.clientY, yaw: st.yaw, pitch: st.pitch }; view.setPointerCapture(e.pointerId); });
+    view.addEventListener('pointermove', (e) => {
+        if (!orbit) return;
+        st.yaw = orbit.yaw + (e.clientX - orbit.x) * 0.01;
+        st.pitch = Math.max(0.05, Math.min(1.55, orbit.pitch + (e.clientY - orbit.y) * 0.01));
+        draw3D();
+    });
+    view.addEventListener('pointerup', () => { orbit = null; });
+    view.addEventListener('pointercancel', () => { orbit = null; });
+
+    new ResizeObserver(() => { sizeView(); draw3D(); }).observe(view);
+    VLTheme.onChange(() => { readTheme(); redraw(); });
+
+    sizeView();
+    full();
+})();
+</script>

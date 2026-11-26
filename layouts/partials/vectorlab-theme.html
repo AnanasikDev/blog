@@ -1,0 +1,95 @@
+{{- /*
+  Shared palette for the vector labs (BasisLab, VectorLab, NormalLab).
+  Include once per page from a shortcode:
+    {{ if not (.Page.Store.Get "vl-theme") }}{{ .Page.Store.Set "vl-theme" true }}{{ partial "vectorlab-theme.html" . }}{{ end }}
+  Everything inside .vl-root uses var(--vl-*); canvases read the same values via VLTheme.read().
+*/ -}}
+<style>
+.vl-root {
+    color-scheme: light;
+    --vl-bg: #ffffff;
+    --vl-panel: #f1f5f9;
+    --vl-deep: #f8fafc;
+    --vl-border: #cbd5e1;
+    --vl-border-strong: #94a3b8;
+    --vl-fg: #0f172a;
+    --vl-fg-2: #334155;
+    --vl-strong: #0f172a;
+    --vl-muted: #475569;
+    --vl-faint: #64748b;
+    --vl-on-accent: #ffffff;
+    --vl-yellow: #d97706;
+    --vl-blue: #2563eb;
+    --vl-red: #dc2626;
+    --vl-green: #059669;
+    --vl-blue-2: #60a5fa;
+    --vl-red-2: #f87171;
+    --vl-shadow: 0 20px 45px -18px rgba(15, 23, 42, 0.28);
+    /* canvas */
+    --vl-canvas: #ffffff;
+    --vl-grid: #e2e8f0;
+    --vl-grid-strong: #94a3b8;
+    --vl-grid-basis: #94a3b8;
+    --vl-label: #64748b;
+    /* axis colours: X = R, Y = G, Z = B */
+    --vl-x: #e11d48;
+    --vl-y: #16a34a;
+    --vl-z: #2563eb;
+}
+.vl-root[data-vl-theme="dark"],
+html[data-scheme="dark"] .vl-root {
+    color-scheme: dark;
+    --vl-bg: #0f172a;
+    --vl-panel: #1e293b;
+    --vl-deep: #020617;
+    --vl-border: #334155;
+    --vl-border-strong: #475569;
+    --vl-fg: #f8fafc;
+    --vl-fg-2: #cbd5e1;
+    --vl-strong: #ffffff;
+    --vl-muted: #94a3b8;
+    --vl-faint: #64748b;
+    --vl-on-accent: #0f172a;
+    --vl-yellow: #fbbf24;
+    --vl-blue: #60a5fa;
+    --vl-red: #f87171;
+    --vl-green: #34d399;
+    --vl-blue-2: #93c5fd;
+    --vl-red-2: #fca5a5;
+    --vl-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    --vl-canvas: #020617;
+    --vl-grid: #1e293b;
+    --vl-grid-strong: #475569;
+    --vl-grid-basis: #334155;
+    --vl-label: #64748b;
+    --vl-x: #fb7185;
+    --vl-y: #4ade80;
+    --vl-z: #60a5fa;
+}
+@media (prefers-color-scheme: dark) {
+    html:not([data-scheme]) .vl-root {
+        color-scheme: dark;
+        --vl-bg: #0f172a; --vl-panel: #1e293b; --vl-deep: #020617; --vl-border: #334155; --vl-border-strong: #475569;
+        --vl-fg: #f8fafc; --vl-fg-2: #cbd5e1; --vl-strong: #ffffff; --vl-muted: #94a3b8; --vl-faint: #64748b; --vl-on-accent: #0f172a;
+        --vl-yellow: #fbbf24; --vl-blue: #60a5fa; --vl-red: #f87171; --vl-green: #34d399; --vl-blue-2: #93c5fd; --vl-red-2: #fca5a5;
+        --vl-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        --vl-canvas: #020617; --vl-grid: #1e293b; --vl-grid-strong: #475569; --vl-grid-basis: #334155; --vl-label: #64748b;
+        --vl-x: #fb7185; --vl-y: #4ade80; --vl-z: #60a5fa;
+    }
+}
+</style>
+<script>
+window.VLTheme = window.VLTheme || {
+    // Read --vl-* values from an element into an object: read(el, ['blue', 'grid']) -> { blue: '#..', grid: '#..' }
+    read(el, names) {
+        const s = getComputedStyle(el), out = {};
+        for (const n of names) out[n] = s.getPropertyValue('--vl-' + n).trim();
+        return out;
+    },
+    // Call fn whenever the site theme (or the OS theme) changes.
+    onChange(fn) {
+        new MutationObserver(fn).observe(document.documentElement, { attributes: true, attributeFilter: ['data-scheme'] });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', fn);
+    },
+};
+</script>

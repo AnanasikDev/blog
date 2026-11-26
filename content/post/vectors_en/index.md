@@ -26,3 +26,9 @@ This principle is called *linear independency*, and those values X and Y are cal
 {{< vectors_sandbox >}}
 
 The app was made using Google Gemini.
+
+A normal map stores a direction in every pixel: the X, Y and Z of the surface normal are packed into the R, G and B channels.
+
+{{< normals_lab >}}
+
+*NormalLab was written by Claude.*
