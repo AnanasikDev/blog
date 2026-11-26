@@ -1,0 +1,34 @@
+{{- /*
+  App overview (content/apps/_index.md, layout: apps). Lists every page tagged "Webapp"
+  as a grid of cards that link to the app; nothing runs here.
+
+  Optional front matter on an app page, to tune its card:
+      appTitle: Stopwatch     # card title (default: the page title without a "WebApp -" prefix)
+      appIcon: "⏱"            # glyph shown when the page has no cover image (default: first letter)
+      appHue: 260             # card colour, 0-360 (default: derived from the title)
+      description: ...        # card text
+*/ -}}
+
+{{ define "body-class" }}apps-page{{ end }}
+
+{{ define "main" }}
+    <header class="apps-header">
+        <h1 class="apps-title">{{ .Title }}</h1>
+        {{ with .Description }}<p class="apps-subtitle">{{ . }}</p>{{ end }}
+    </header>
+
+    {{ with index .Site.Taxonomies.tags "webapp" }}
+        {{ $pages := where .Pages "Params.hidden" "!=" true }}
+        {{ $pag := $.Paginate $pages 24 }}
+        <section class="apps-grid">
+            {{ range $pag.Pages }}
+                {{ partial "article-list/app-card" . }}
+            {{ end }}
+        </section>
+        {{- partial "pagination.html" $ -}}
+    {{ else }}
+        <p class="apps-empty">No apps yet.</p>
+    {{ end }}
+
+    {{- partial "footer/footer" . -}}
+{{ end }}

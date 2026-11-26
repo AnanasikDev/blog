@@ -45,4 +45,11 @@ icon = "brand-itchdotio"
     weight = 30
     [main.params]
         icon = "portfolio"
+
+[[main]]
+    name = "Apps"
+    url = "/apps"
+    weight = 31
+    [main.params]
+        icon = "apps"
         

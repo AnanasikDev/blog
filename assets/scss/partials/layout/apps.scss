@@ -1,0 +1,132 @@
+// App overview page (layouts/_default/apps.html).
+
+.apps-header {
+    text-align: center;
+    padding: 10px 0 5px;
+
+    .apps-title {
+        margin: 0;
+        font-size: 3.2rem;
+        color: var(--card-text-color-main);
+    }
+    .apps-subtitle {
+        margin: 8px 0 0;
+        font-size: 1.6rem;
+        color: var(--card-text-color-secondary);
+    }
+}
+
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.apps-empty {
+    text-align: center;
+    color: var(--card-text-color-secondary);
+}
+
+.app-card {
+    // unquote: keep Sass from evaluating hsl() with var() inside
+    --app-a: #{unquote("hsl(var(--app-hue, 260), 78%, 64%)")};
+    --app-b: #{unquote("hsl(calc(var(--app-hue, 260) + 45), 85%, 60%)")};
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: calc(var(--card-border-radius) + 4px);
+    background: var(--card-background);
+    box-shadow: var(--shadow-l1);
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-l2), 0 18px 40px -18px var(--app-a);
+
+        .app-card-art img,
+        .app-card-glyph { transform: scale(1.06); }
+        .app-card-open { gap: 10px; color: var(--app-a); }
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--app-a);
+        outline-offset: 3px;
+    }
+}
+
+.app-card-art {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+        radial-gradient(120% 90% at 20% 10%, rgba(255, 255, 255, 0.35), transparent 55%),
+        linear-gradient(135deg, var(--app-a), var(--app-b));
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    // soft fade into the card body
+    &::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 30%;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.12));
+        pointer-events: none;
+    }
+}
+
+.app-card-glyph {
+    font-size: 5.6rem;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.app-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-grow: 1;
+    padding: 16px 20px 18px;
+}
+
+.app-card-title {
+    margin: 0;
+    font-size: 1.9rem;
+    color: var(--card-text-color-main);
+}
+
+.app-card-desc {
+    margin: 0;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: var(--card-text-color-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.app-card-open {
+    margin-top: auto;
+    padding-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.4rem;
+    color: var(--card-text-color-tertiary);
+    transition: gap 0.2s, color 0.2s;
+}

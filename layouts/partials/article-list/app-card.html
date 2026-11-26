@@ -1,0 +1,23 @@
+{{- $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" -}}
+{{- $title := .Params.appTitle | default (replaceRE `^(?i)web\s*app\s*[-–—:]\s*` "" .Title) -}}
+{{- $hue := .Params.appHue | default (mod (hash.FNV32a .Title) 360) -}}
+{{- $glyph := .Params.appIcon | default (upper (substr $title 0 1)) -}}
+<a class="app-card" href="{{ .RelPermalink }}" style="{{ printf "--app-hue: %v" $hue | safeCSS }}">
+    <div class="app-card-art">
+        {{- if $image.exists -}}
+            {{- if and $image.resource (ne $image.resource.MediaType.SubType "svg") -}}
+                {{- $thumb := $image.resource.Fill "800x450 smart" -}}
+                <img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" loading="lazy" alt="">
+            {{- else -}}
+                <img src="{{ $image.permalink }}" loading="lazy" alt="">
+            {{- end -}}
+        {{- else -}}
+            <span class="app-card-glyph" aria-hidden="true">{{ $glyph }}</span>
+        {{- end -}}
+    </div>
+    <div class="app-card-body">
+        <h2 class="app-card-title">{{ $title }}</h2>
+        {{ with .Description }}<p class="app-card-desc">{{ . }}</p>{{ end }}
+        <span class="app-card-open">Open <span aria-hidden="true">→</span></span>
+    </div>
+</a>
