@@ -28,3 +28,6 @@
 
 @import "general.scss";
 @import "custom.scss";
+
+// last, so it overrides the per-list hover rules (including tilegallery.scss from custom.scss)
+@import "partials/card-pop.scss";

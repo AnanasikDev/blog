@@ -1,0 +1,43 @@
+// Shared card hover: lift, gentle image zoom and a glow in the card's own colour.
+// The colour comes from --pop-hue, set per card by layouts/partials/helper/card-hue.html.
+
+@mixin card-pop($lift: 4px, $zoom: 1.05) {
+    // unquote: keep Sass from evaluating hsl() with var() inside
+    --pop-color: #{unquote("hsl(var(--pop-hue, 220), 78%, 64%)")};
+
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+
+    img {
+        transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    &:hover,
+    &:focus-within {
+        transform: translateY(-#{$lift});
+        box-shadow: var(--shadow-l2), 0 18px 40px -18px var(--pop-color);
+
+        img {
+            transform: scale($zoom);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        &, img { transition: box-shadow 0.25s ease; }
+        &:hover, &:focus-within {
+            transform: none;
+            img { transform: none; }
+        }
+    }
+}
+
+// Home page and section lists (big cards: a smaller zoom so the cover barely moves)
+.article-list article { @include card-pop(4px, 1.03); }
+
+// Related content, archives, subsections
+.article-list--tile article { @include card-pop(4px, 1.06); }
+
+// Portfolio gallery
+.article-gallery article { @include card-pop(5px, 1.06); }
+
+// App overview
+.app-card { @include card-pop(4px, 1.06); }

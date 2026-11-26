@@ -1,0 +1,5 @@
+{{- /*
+  The hue (0-360) of a page's card glow: front matter cardHue (or appHue), else derived from the title.
+  Usage: style="--pop-hue: {{ partial "helper/card-hue" . }}"
+*/ -}}
+{{- return (.Params.cardHue | default .Params.appHue | default (mod (hash.FNV32a .Title) 360)) -}}
