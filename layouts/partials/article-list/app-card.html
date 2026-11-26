@@ -1,8 +1,8 @@
 {{- $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" -}}
 {{- $title := .Params.appTitle | default (replaceRE `^(?i)web\s*app\s*[-–—:]\s*` "" .Title) -}}
-{{- $hue := partial "helper/card-hue" . -}}
+{{- $hue := partial "helper/card-hue" . -}}{{/* a colour, despite the name */}}
 {{- $glyph := .Params.appIcon | default (upper (substr $title 0 1)) -}}
-<a class="app-card" href="{{ .RelPermalink }}" style="{{ printf "--app-hue: %v; --pop-hue: %v" $hue $hue | safeCSS }}">
+<a class="app-card" href="{{ .RelPermalink }}" style="{{ printf "--pop-color: %v" $hue | safeCSS }}">
     <div class="app-card-art">
         {{- if $image.exists -}}
             {{- if and $image.resource (ne $image.resource.MediaType.SubType "svg") -}}

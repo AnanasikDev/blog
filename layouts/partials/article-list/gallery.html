@@ -1,5 +1,5 @@
 {{ $image := partialCached "helper/image" (dict "Context" . "Type" "articleList") .RelPermalink "articleList" }}
-<article class="paging-gallery-item" style="{{ printf "--pop-hue: %v" (partial "helper/card-hue" .) | safeCSS }}">
+<article class="paging-gallery-item" style="{{ printf "--pop-color: %v" (partial "helper/card-hue" .) | safeCSS }}">
     {{ partial "article/components/header--gallery" . }}
     {{ $in := dict 
         "page" . 

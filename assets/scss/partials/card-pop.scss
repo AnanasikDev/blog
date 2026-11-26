@@ -1,10 +1,7 @@
 // Shared card hover: lift, gentle image zoom and a glow in the card's own colour.
-// The colour comes from --pop-hue, set per card by layouts/partials/helper/card-hue.html.
+// The colour comes from --pop-color, set per card by layouts/partials/helper/card-hue.html.
 
 @mixin card-pop($lift: 4px, $zoom: 1.05) {
-    // unquote: keep Sass from evaluating hsl() with var() inside
-    --pop-color: #{unquote("hsl(var(--pop-hue, 220), 78%, 64%)")};
-
     transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
 
     img {
@@ -14,7 +11,7 @@
     &:hover,
     &:focus-within {
         transform: translateY(-#{$lift});
-        box-shadow: var(--shadow-l2), 0 18px 40px -18px var(--pop-color);
+        box-shadow: var(--shadow-l2), 0 18px 40px -18px var(--pop-color, #4e767d);
 
         img {
             transform: scale($zoom);

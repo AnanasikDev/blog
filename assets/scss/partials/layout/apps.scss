@@ -28,9 +28,9 @@
 }
 
 .app-card {
-    // unquote: keep Sass from evaluating hsl() with var() inside
-    --app-a: #{unquote("hsl(var(--app-hue, 260), 78%, 64%)")};
-    --app-b: #{unquote("hsl(calc(var(--app-hue, 260) + 45), 85%, 60%)")};
+    // tile gradient: the card colour into a lighter tint of it
+    --app-a: var(--pop-color, #4e767d);
+    --app-b: color-mix(in srgb, var(--app-a) 65%, white);
 
     display: flex;
     flex-direction: column;
