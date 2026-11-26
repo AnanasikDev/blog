@@ -1,5 +1,5 @@
 ---
-title: WebApp - advanced stopwatch
+title: WebApp Advanced stopwatch
 slug: app_stopwatch
 date: 2026-11-26
 readTime: false
